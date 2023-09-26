@@ -75,3 +75,8 @@
 .btn:active {
   transform: scale(0.95);
 }
+
+body{
+  color: white;
+  background-color: black;
+}
