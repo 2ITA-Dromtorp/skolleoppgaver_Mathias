@@ -1,19 +1,25 @@
+import React, { useState } from 'react';
 import arrowup from './images/arrow_up.png';
 import arrowdown from './images/arrow_down.png';
-import { useState } from 'react';
 
-// En komponent som heter Pil. Den eksporteres.
+
 export default function Pil() {
-
     const [count, setCount] = useState(5);
 
-    return (
+    const handleIncrement = () => {
+        setCount(count + 1);
+    };
 
-        <div className='box'>
-            <button type="button"> <img src={arrowup} alt="arrow up" /></button>
-            <p> {count} </p>
-            <button type="button"> <img src={arrowdown} alt="arrow down"/> </button>
-        </div>
-    )
+    const handleIncrement10= () => {
+        setCount(count + 10);
+    };
+
+    const handleDecrement = () => {
+        setCount(count - 1);
+    };
+
+    const handleReset = () => {
+        setCount(0);
+    };
 
 }
