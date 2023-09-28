@@ -30,17 +30,28 @@ export default function App() {
 } 
 */
 
+
+/*
 import React, { useState } from "react";
 import './App.css'; // Import your CSS file
+
 export default function Counter() {
   const [count, setCount] = useState(0);
+
+  const handleIncrement100 = () => {
+    setCount(count + 100);
+  };
+
+  const handleIncrement10 = () => {
+    setCount(count + 10);
+  };
 
   const handleIncrement = () => {
     setCount(count + 1);
   };
 
-  const handleIncrement10 = () => {
-    setCount(count + 10);
+  const handleReset = () => {
+    setCount(0);
   };
 
   const handleDecrement = () => {
@@ -50,22 +61,35 @@ export default function Counter() {
   const handleDecrement10 = () => {
     setCount(count - 10);
   };
-  const handleReset = () => {
-    setCount(0);
+
+  const handleDecrement100 = () => {
+    setCount(count - 100);
   };
+  
+
 
   return (
     <div className="counter-container">
-      <div>
-        <p className="count-display"> {count} </p>
-        <div className="button-container">
-          <button className="btn btn-success" onClick={handleIncrement10}>+10</button>
-          <button className="btn btn-success" onClick={handleIncrement}>+</button>
-          <button className="btn btn-primary" onClick={handleReset}>Reset</button>
-          <button className="btn btn-danger" onClick={handleDecrement}>-</button>
-          <button className="btn btn-danger" onClick={handleDecrement10}>-10</button>
-        </div>
+      <div className="centered-content">
+        <p className="count-display">{count}</p>
+      </div>
+      <div className="button-container">
+      <button className="btn btn-success" onClick={handleIncrement100}>+100</button>
+        <button className="btn btn-success" onClick={handleIncrement10}>+10</button>
+        <button className="btn btn-success" onClick={handleIncrement}>+</button>
+        <button className="btn btn-primary" onClick={handleReset}>Reset</button>
+        <button className="btn btn-danger" onClick={handleDecrement}>-</button>
+        <button className="btn btn-danger" onClick={handleDecrement10}>-10</button>
+        <button className="btn btn-danger" onClick={handleDecrement100}>-100</button>
+        
       </div>
     </div>
   );
 }
+*/
+
+
+
+
+
+
