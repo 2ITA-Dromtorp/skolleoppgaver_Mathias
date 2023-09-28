@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* klokke
 import React, { useState, useEffect } from 'react';
 import './App.css';
@@ -89,7 +90,55 @@ export default function Counter() {
 */
 
 
+import React, { useState } from "react";
+import './App.css';
 
+const choices = ["rock", "paper", "scissors"];
 
+export default function RPSGame() {
+  const [playerChoice, setPlayerChoice] = useState(null);
+  const [computerChoice, setComputerChoice] = useState(null);
+  const [result, setResult] = useState(null);
 
+  const generateComputerChoice = () => choices[Math.floor(Math.random() * choices.length)];
 
+  const determineWinner = (player, computer) => {
+    if (player == computer) return "It's a tie!";
+    const winConditions = {
+      rock: "scissors",
+      paper: "rock",
+      scissors: "paper"
+    };
+    return winConditions[player] == computer ? "You win!" : "Computer wins!";
+  };
+
+  const handleChoice = (choice) => {
+    const computerChoice = generateComputerChoice();
+    setPlayerChoice(choice);
+    setComputerChoice(computerChoice);
+    setResult(determineWinner(choice, computerChoice));
+  };
+
+  return (
+    <div className="rps-container">
+      <h1>Stein,Saks,Papir</h1>
+      <div className="button-container">
+        {choices.map((choice) => (
+          <button
+            key={choice}
+            className="rps-button"
+            onClick={() => handleChoice(choice)}
+          >
+            {choice}
+          </button>
+        ))}
+      </div>
+      {computerChoice && (
+        <div className="result-container">
+          <p>Computer chose: {computerChoice}</p>
+          <p className="result-text">{result}</p>
+        </div>
+      )}
+    </div>
+  );
+}

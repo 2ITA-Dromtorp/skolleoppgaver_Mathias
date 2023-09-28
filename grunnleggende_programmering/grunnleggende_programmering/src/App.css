@@ -83,57 +83,16 @@ body{
 }
 */
 
-
-/* RPSGame.css */
-
-.rps-container {
-  text-align: center;
-  font-family: Arial, sans-serif;
-  background-color: #000000;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
-  margin: 0 auto;
-  width: 300px;
-}
-
-h1 {
-  color: #007BFF;
-}
-
-.button-container {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
-}
-
-.rps-button {
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.rps-button:hover {
-  background-color: #0056b3;
-}
-
-.result-container {
-  margin-top: 20px;
-}
-
-.result-text {
-  font-size: 20px;
-  font-weight: bold;
-  color: #ff0019;
-}
-
-
 body{
-  color: white;
+  text-align: center;
+  color:  white;
   background-color: black;
+}
+
+.result-text{
+  color: yellow;
+}
+
+.rps-button{
+  background-color: rgb(255, 255, 255);
 }
