@@ -1,17 +1,15 @@
 export default function Elev(props) {
-
-let name = props.name
-console.log(name);
-
-function handleClick (){
-    console.log()
-}
-
+    const names = ["Martin", "Mathias", "Kevin", "Andreas", "Falk","Sander","Ylva","Vanessa","Chen","Fridtjof","Luz" ];
+    const randomName = names[Math.floor(Math.random() * names.length)];
+    
+  
+    function handleClick() {
+      console.log('Elev clicked');
+    }
+  
     return (
-
-        <div onClick={handleClick} className='person'>
-            {name}
-        </div>
-
-    )
-}
+      <div onClick={handleClick} className='person'>
+        {randomName}
+      </div>
+    );
+  }

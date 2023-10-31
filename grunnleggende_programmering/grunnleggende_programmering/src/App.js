@@ -146,68 +146,18 @@ export default function RPSGame() {
 */
 
 import './App.css';
-import Elev from './Elev';
+import { Route, Routes } from "react-router-dom";
+import Klassekart from './klassekart';
+import Profile from './profile';
 
 function App() {
 
   return (
-    <div className='container'>
-
-      <div className='learer'>
-
-        <Elev name="lærer"/>
-
-      </div>
-
-      <div className='forste_rad'>
-
-        <Elev name="Martin" />
-
-        <Elev name="Mathias"/>
-
-        <Elev name="Kevin"/>
-
-        <Elev name="Andreas"/>
-
-      </div>
-
-      <div className='andre_rad'>
-
-        <Elev name="Falk"/>
-        <Elev name="Sander"/>
-        <Elev name="Ylva"/>
-
-        <Elev name="Vanessa"/>
-        <Elev name="Chen"/>
-
-      </div>
-
-      <div className='tredje_rad'>
-
-        <Elev name="Luz"/>
-        <Elev name="Fridjiof"/>
-
-      </div>
-
-
-
-    </div>
+    <Routes>
+      <Route path="/" element={<Klassekart />} />
+      <Route path="/:profile" element={<Profile />} />
+    </Routes>
   );
 }
 
 export default App;
-
-
-import React from "react"
-import ReactDOM from "react-dom/client"
-import App from "./App"
-import { BrowserRouter } from "react-router-dom"
-
-const root = ReactDOM.createRoot(document.getElementById("root"))
-root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
-)
