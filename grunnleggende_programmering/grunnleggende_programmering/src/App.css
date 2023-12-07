@@ -99,7 +99,7 @@ body{
 */
 
 
-
+/*
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -155,4 +155,47 @@ body{
   border: solid white 2px;
   background: darkgray;
   border-radius: 15%;
+}
+*/
+
+/* App.css */
+
+*{
+  font-size: 30px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Endret fra flex-start til flex-end for å plassere elementene på høyre side */
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.input-field {
+  margin-bottom: 10px;
+  padding: 10px;
+  width: 200px;
+}
+
+.login-button,
+.register-button,
+.send-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.greeting-message {
+  margin-top: 20px;
+  text-align: center;
 }
