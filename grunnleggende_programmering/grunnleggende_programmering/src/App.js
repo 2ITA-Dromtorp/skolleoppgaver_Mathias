@@ -293,15 +293,13 @@ function App() {
   );
 }
 
-export default App;
-*/
-
-
+export default App;*/
 
 import React, { useState } from 'react';
+import './index.css'; 
 
 const Ticket = ({ id, problem, status, closeTicket, deleteTicket, handleTicket }) => (
-  <div>
+  <div className="ticket">
     <h2>{`ID: ${id}, Problem: ${problem}`}</h2>
     <p>{`Status: ${status}`}</p>
     {(status === 'Open' || status === 'In Progress') && (
@@ -341,7 +339,7 @@ const TicketSystem = () => {
   };
 
   return (
-    <div>
+    <div className="ticket-system">
       <input type="text" value={problem} onChange={(e) => setProblem(e.target.value)} placeholder="Skriv inn problemet ditt her" />
       <button onClick={createTicket}>Create Ticket</button>
       {tickets.map(ticket => <Ticket key={ticket.id} {...ticket} closeTicket={closeTicket} deleteTicket={deleteTicket} handleTicket={handleTicket} />)}
