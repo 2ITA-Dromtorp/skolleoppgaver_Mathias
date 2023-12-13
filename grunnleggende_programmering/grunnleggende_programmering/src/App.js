@@ -296,3 +296,57 @@ function App() {
 export default App;
 */
 
+
+
+import React, { useState } from 'react';
+
+const Ticket = ({ id, problem, status, closeTicket, deleteTicket, handleTicket }) => (
+  <div>
+    <h2>{`ID: ${id}, Problem: ${problem}`}</h2>
+    <p>{`Status: ${status}`}</p>
+    {(status === 'Open' || status === 'In Progress') && (
+      <>
+        <button onClick={() => closeTicket(id)}>Close Ticket</button>
+        <button onClick={() => handleTicket(id)}>Handle Ticket</button>
+      </>
+    )}
+    <button onClick={() => deleteTicket(id)}>Delete Ticket</button>
+  </div>
+);
+
+const TicketSystem = () => {
+  const [tickets, setTickets] = useState([]);
+  const [problem, setProblem] = useState('');
+
+  const createTicket = () => {
+    const id = tickets.length + 1;
+    setTickets([...tickets, { id, problem, status: 'Open' }]);
+    setProblem('');
+    console.log(`Ticket created with ID: ${id}, Problem: ${problem}, Status: Open`);
+  };
+
+  const closeTicket = (id) => {
+    setTickets(tickets.map(ticket => ticket.id === id ? { ...ticket, status: 'Closed' } : ticket));
+    console.log(`Ticket with ID: ${id} has been closed.`);
+  };
+
+  const deleteTicket = (id) => {
+    setTickets(tickets.filter(ticket => ticket.id !== id));
+    console.log(`Ticket with ID: ${id} has been deleted.`);
+  };
+
+  const handleTicket = (id) => {
+    setTickets(tickets.map(ticket => ticket.id === id ? { ...ticket, status: 'In Progress' } : ticket));
+    console.log(`Ticket with ID: ${id} is in progress.`);
+  };
+
+  return (
+    <div>
+      <input type="text" value={problem} onChange={(e) => setProblem(e.target.value)} placeholder="Skriv inn problemet ditt her" />
+      <button onClick={createTicket}>Create Ticket</button>
+      {tickets.map(ticket => <Ticket key={ticket.id} {...ticket} closeTicket={closeTicket} deleteTicket={deleteTicket} handleTicket={handleTicket} />)}
+    </div>
+  );
+};
+
+export default TicketSystem;
