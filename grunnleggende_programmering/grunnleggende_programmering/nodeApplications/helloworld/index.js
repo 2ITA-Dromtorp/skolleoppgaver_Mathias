@@ -1,69 +1,58 @@
-const express = require('express');
-const app = express();
-const port = 3000;
-const mysql = require('mysql');
-const path = require('path');
+const express = require('express')
+const app = express()
+const port = 3000
+var mysql = require('mysql');
+var cors = require('cors')
 
+app.use(cors())
 
-// Use connection pooling for better scalability and performance
-const connection = mysql.createPool({
-  connectionLimit: 10, // Adjust according to your requirements
+var connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
   port: 3306,
-  password: 'root',
-  database: 'dromtorp',
+  user: 'johu',
+  password: 'dromtorp',
+  database: 'dromtorp'
 });
 
-// Middleware to handle errors and set appropriate headers
-app.use((req, res, next) => {
-  res.setHeader('Content-Type', 'text/html'); // Change content type to HTML
-  next();
+connection.connect(function(err) {
+
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+  }
+
+  console.log('connected as id ' + connection.threadId);
 });
 
-// Define a route to fetch data
-app.get('/', (req, res) => {
-  // Use the connection pool to handle multiple requests efficiently
-  connection.query('SELECT * FROM elev', (error, results, fields) => {
-    // Handle connection errors
-    if (error) {
-      console.error('Error connecting to the database:', error);
-      res.status(500).send('<p>Error: Internal Server Error</p>');
-      return;
-    }
 
-    // HTML code for the navigation bar
-    const navBar = `
-      <div class="navbar">
-        <a href="#">select</a>
-        <a href="#">update</a>
-        <a href="#">insert</a>
-        <a href='#'>delete</a>
-      </div>
-    `;
+app.get('/', (request, response) => {
 
-    // HTML response with the navigation bar and data
-    res.send(`
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Express App</title>
-        <link rel="stylesheet" href="styles.css"> <!-- Corrected path to styles.css -->
-      </head>
-      <body>
-        ${navBar}
-        <div class="content">
-          <pre>${JSON.stringify(results, null, 2)}</pre>
-        </div>
-      </body>
-      </html>
-    `);
+  connection.query('SELECT * FROM elev', function (error, results, fields) {
+    if (error) throw error;
+    response.send(JSON.stringify(results));
   });
-});
 
-// Start the server
+  
+  
+})
+
+/*app.get("/updateuser/:newhobby/:id", (request, response) => {
+  
+  let newhobby = request.params.newhobby;
+  let id = request.params.id;
+  console.log(newhobby);
+  let sqlquery = 'UPDATE elev SET hobby=? WHERE ElevID=?';
+
+  connection.query(sqlquery, [newhobby, id], function (error, results, fields) {
+    if (error) throw error;
+    response.send(JSON.stringify(results));
+  });
+
+  response.send('If This works, great!');
+  
+})*/
+
 app.listen(port, () => {
-  console.log(`Express app listening on port ${port}`);
-});
+  console.log(`Example app listening on port ${port}`)
+})
+
