@@ -14,7 +14,7 @@ var connection = mysql.createConnection({
   database: 'dromtorp'
 });
 
-connection.connect(function(err) {
+connection.connect(function (err) {
 
   if (err) {
     console.error('error connecting: ' + err.stack);
@@ -32,8 +32,8 @@ app.get('/', (request, response) => {
     response.send(JSON.stringify(results));
   });
 
-  
-  
+
+
 })
 
 /*app.get("/updateuser/:newhobby/:id", (request, response) => {
