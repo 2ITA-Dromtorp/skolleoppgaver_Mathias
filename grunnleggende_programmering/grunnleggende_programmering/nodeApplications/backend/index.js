@@ -32,11 +32,9 @@ app.get('/', (request, response) => {
     response.send(JSON.stringify(results));
   });
 
-
-
 })
 
-/*app.get("/updateuser/:newhobby/:id", (request, response) => {
+app.get("/updateuser/:newhobby/:id", (request, response) => {
   
   let newhobby = request.params.newhobby;
   let id = request.params.id;
@@ -48,7 +46,7 @@ app.get('/', (request, response) => {
     response.send('If This works, great!');
   });
   
-})*/
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
