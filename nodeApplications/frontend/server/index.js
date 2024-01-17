@@ -1,56 +1,86 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 const PORT = 3000;
-const mysql = require('mysql2');
+const mysql = require("mysql2");
 
-app.use(express.static('build'));
+app.use(express.static("build"));
 app.use(express.json());
 
 const dbConfig = {
-  user: 'root',
-  password: 'root',
-  database: 'mlem',
-  host: 'localhost',
+  user: "root",
+  password: "root",
+  database: "mlem",
+  host: "localhost",
   port: 3306,
 };
 
 const connection = mysql.createConnection(dbConfig);
 connection.connect(function (err) {
-    if (err) {
-        console.error('Connection failed!');
-        throw err;
-    }
-    console.log('Connected to MySQL database!');
+  if (err) {
+    console.error("Connection failed!");
+    throw err;
+  }
+  console.log("Connected to MySQL database!");
 });
 
-
-
-app.get('/', (req, res) => {
-  const sql = 'SELECT * FROM elev';
+app.get("/", (req, res) => {
+  const sql = "SELECT * FROM elev";
   connection.query(sql, (err, result) => {
-      if (err) {
-          console.error(err);
-          res.status(500).send('Internal Server Error');
-          return;
-      }
+    if (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+      return;
+    }
 
-      console.log(JSON.stringify(result));
-      console.log(result);
-      res.json(result); // Send as JSON
+    console.log(JSON.stringify(result));
+    console.log(result);
+    res.json(result); // Send as JSON
+  });
+});
+
+app.post("/", (req, res) => {
+  const elev = req.body;
+
+  console.log("post", req);
+
+
+  var sql =
+    "('Fornavn, 'Etternavn', 'Klasse', 'Hobby', 'Kjonn', 'DatamaskinID') VALUES ?";
+  var values = [
+    [
+      elev.Fornavn,
+      elev.Etternavn,
+      elev.Klasse,
+      elev.Hobby,
+      elev.Kjonn,
+      elev.DatamaskinID,
+    ],
+  ];
+
+  connection.query(sql, [values], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+      return;
+    }
+
+    console.log(JSON.stringify(result));
+    console.log(result);
+    res.sendStatus(201);
   });
 });
 
 app.listen(PORT, () => {
-    console.log(`Example app listening on port ${PORT}`);
+  console.log(`Example app listening on port ${PORT}`);
 });
 
 // app.listen(PORT, () => {
 //   console.log('Server started' + PORT);
 // })
 
-  // function (err) {
-  //   if (err) throw err;
-  //   console.error('Failed!');
-  // });
-  
-  // connection.end();
+// function (err) {
+//   if (err) throw err;
+//   console.error('Failed!');
+// });
+
+// connection.end();
