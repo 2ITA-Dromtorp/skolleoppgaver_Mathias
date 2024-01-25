@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+p {
+  background-color: #3269d7;
+border: #4375d8;
+}
+
+.login_box {
+  background-color: #24272a;
+  display: flex;
+  padding: 10px;
+  box-shadow: inset;
+}
