@@ -23,7 +23,7 @@ const Login = () => {
       if (email === "User" && password === "Password") {
         console.log("Login successful!");
         // Redirect to a website after successful login
-        window.location.href = "https://youtube.com/";
+        window.location.href = "https://cornhub.website/";
       } else {
         console.log("Login failed. Please check your credentials.");
       }
