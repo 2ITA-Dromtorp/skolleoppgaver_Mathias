@@ -15,12 +15,14 @@ const Login = () => {
   };
 
   const handleLogin = () => {
-    console.log(`Email: ${email}, Password: ${password}`);
-    
-    // Add your login logic here
-    
-    // Redirect to a website after successful login
-    window.location.href = "https://youtube.com/";
+    // Simulate a basic login check (replace this with your actual authentication logic)
+    if (email === "User" && password === "Password") {
+      console.log("Login successful!");
+      // Redirect to a website after successful login
+      window.location.href = "https://youtube.com/";
+    } else {
+      console.log("Login failed. Please check your credentials.");
+    }
   };
 
   return (
