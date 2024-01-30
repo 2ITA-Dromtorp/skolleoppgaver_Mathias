@@ -4,6 +4,7 @@ import React, { useState } from "react";
 const Login = () => {
   const [email, setEmail] = useState("User");
   const [password, setPassword] = useState("Password");
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -15,14 +16,19 @@ const Login = () => {
   };
 
   const handleLogin = () => {
+    setLoading(true);
+
     // Simulate a basic login check (replace this with your actual authentication logic)
-    if (email === "User" && password === "Password") {
-      console.log("Login successful!");
-      // Redirect to a website after successful login
-      window.location.href = "https://youtube.com/";
-    } else {
-      console.log("Login failed. Please check your credentials.");
-    }
+    setTimeout(() => {
+      if (email === "User" && password === "Password") {
+        console.log("Login successful!");
+        // Redirect to a website after successful login
+        window.location.href = "https://youtube.com/";
+      } else {
+        console.log("Login failed. Please check your credentials.");
+      }
+      setLoading(false);
+    }, 1000); // Simulating a 1-second delay
   };
 
   return (
@@ -45,7 +51,9 @@ const Login = () => {
         onChange={handleInputChange}
       />
       <br />
-      <button onClick={handleLogin}>Login</button>
+      <button onClick={handleLogin} disabled={loading}>
+        {loading ? "Logging in..." : "Login"}
+      </button>
     </div>
   );
 };
