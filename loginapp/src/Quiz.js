@@ -51,7 +51,7 @@ const Quiz = ({ onQuizComplete }) => {
 
   const calculateScore = () => {
     const correctAnswers = selectedAnswers.filter((answer, index) => answer === questions[index].correctAnswer);
-    return (correctAnswers.length / questions.length) * 100;
+    return correctAnswers.length;
   };
 
   return (
@@ -77,6 +77,14 @@ const Quiz = ({ onQuizComplete }) => {
       <button onClick={handleNextQuestion} disabled={loading || selectedAnswers[currentQuestion] === null}>
         {loading ? "Checking answer..." : "Next"}
       </button>
+
+      {/* Display score at the end */}
+      {currentQuestion === questions.length && (
+        <div>
+          <h2>Quiz Complete!</h2>
+          <p>Your Score: {calculateScore()} out of {questions.length}</p>
+        </div>
+      )}
     </div>
   );
 };
