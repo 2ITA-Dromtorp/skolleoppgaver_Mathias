@@ -2,41 +2,38 @@
 import React, { useState } from "react";
 
 const questions = [
-  {
-    id: 1,
-    text: "What is the capital of France?",
-    options: ["Berlin", "Madrid", "Paris", "Rome"],
-    correctAnswer: "Paris",
-  },
-  // Add more questions as needed
+  // ... (unchanged)
 ];
 
 const Quiz = ({ onQuizComplete }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
 
   const handleAnswerSelect = (answer) => {
     setSelectedAnswer(answer);
   };
 
   const handleNextQuestion = () => {
-    // Check if the selected answer is correct
-    const isCorrect = questions[0].correctAnswer === selectedAnswer;
+    const isCorrect = questions[currentQuestion].correctAnswer === selectedAnswer;
 
-    // Log the answer
-    console.log(`Answer: ${isCorrect ? 'Correct' : 'Incorrect'}`);
+    console.log(`Answer to Question ${currentQuestion + 1}: ${isCorrect ? 'Correct' : 'Incorrect'}`);
 
-    // Finish the quiz
-    onQuizComplete();
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+      setSelectedAnswer(null);
+    } else {
+      onQuizComplete();
+    }
   };
 
   return (
-    <div>
-      <h2>{questions[0].text}</h2>
-      <ul>
-        {questions[0].options.map((option, index) => (
-          <li key={index}>
-            <label>
+    <div style={{ maxWidth: '400px', margin: '20px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f8f8f8' }}>
+      <h2 style={{ fontSize: '18px', marginBottom: '10px' }}>{questions[currentQuestion].text}</h2>
+      <ul style={{ listStyle: 'none', padding: '0' }}>
+        {questions[currentQuestion].options.map((option, index) => (
+          <li key={index} style={{ marginBottom: '8px' }}>
+            <label style={{ display: 'block' }}>
               <input
                 type="radio"
                 name="answer"
@@ -50,8 +47,19 @@ const Quiz = ({ onQuizComplete }) => {
           </li>
         ))}
       </ul>
-      <button onClick={handleNextQuestion} disabled={loading || selectedAnswer === null}>
-        {loading ? "Checking answer..." : "Finish"}
+      <button
+        style={{
+          padding: '10px',
+          backgroundColor: '#007bff',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+        }}
+        onClick={handleNextQuestion}
+        disabled={loading || selectedAnswer === null}
+      >
+        {loading ? "Checking answer..." : currentQuestion === questions.length - 1 ? "Finish" : "Next"}
       </button>
     </div>
   );
