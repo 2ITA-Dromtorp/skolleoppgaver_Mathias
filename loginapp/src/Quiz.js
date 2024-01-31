@@ -30,28 +30,28 @@ const questions = [
 
 const Quiz = ({ onQuizComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null));
   const [loading, setLoading] = useState(false);
 
   const handleAnswerSelect = (answer) => {
-    setSelectedAnswer(answer);
+    const updatedAnswers = [...selectedAnswers];
+    updatedAnswers[currentQuestion] = answer;
+    setSelectedAnswers(updatedAnswers);
   };
 
   const handleNextQuestion = () => {
-    // Check if the selected answer is correct
-    const isCorrect = questions[currentQuestion].correctAnswer === selectedAnswer;
-
-    // Log the answer
-    console.log(`Question ${currentQuestion + 1}: ${isCorrect ? 'Correct' : 'Incorrect'}`);
-
     // Move to the next question or finish the quiz
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer(null);
     } else {
       // Quiz is complete
-      onQuizComplete();
+      onQuizComplete(selectedAnswers);
     }
+  };
+
+  const calculateScore = () => {
+    const correctAnswers = selectedAnswers.filter((answer, index) => answer === questions[index].correctAnswer);
+    return (correctAnswers.length / questions.length) * 100;
   };
 
   return (
@@ -65,7 +65,7 @@ const Quiz = ({ onQuizComplete }) => {
                 type="radio"
                 name="answer"
                 value={option}
-                checked={selectedAnswer === option}
+                checked={selectedAnswers[currentQuestion] === option}
                 onChange={() => handleAnswerSelect(option)}
                 disabled={loading}
               />
@@ -74,7 +74,7 @@ const Quiz = ({ onQuizComplete }) => {
           </li>
         ))}
       </ul>
-      <button onClick={handleNextQuestion} disabled={loading || selectedAnswer === null}>
+      <button onClick={handleNextQuestion} disabled={loading || selectedAnswers[currentQuestion] === null}>
         {loading ? "Checking answer..." : "Next"}
       </button>
     </div>
