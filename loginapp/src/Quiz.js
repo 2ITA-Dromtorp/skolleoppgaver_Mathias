@@ -30,28 +30,25 @@ const questions = [
 
 const Quiz = ({ onQuizComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null));
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleAnswerSelect = (answer) => {
-    const updatedAnswers = [...selectedAnswers];
-    updatedAnswers[currentQuestion] = answer;
-    setSelectedAnswers(updatedAnswers);
+    setSelectedAnswer(answer);
   };
 
   const handleNextQuestion = () => {
-    // Move to the next question or finish the quiz
     if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
+      setCurrentQuestion((prevQuestion) => prevQuestion + 1);
+      setSelectedAnswer(null);
     } else {
-      // Quiz is complete
-      onQuizComplete(selectedAnswers);
+      onQuizComplete();
     }
   };
 
   const calculateScore = () => {
-    const correctAnswers = selectedAnswers.filter((answer, index) => answer === questions[index].correctAnswer);
-    return correctAnswers.length;
+    const correctAnswers = selectedAnswer === questions[currentQuestion].correctAnswer ? 1 : 0;
+    return correctAnswers;
   };
 
   return (
@@ -65,7 +62,7 @@ const Quiz = ({ onQuizComplete }) => {
                 type="radio"
                 name="answer"
                 value={option}
-                checked={selectedAnswers[currentQuestion] === option}
+                checked={selectedAnswer === option}
                 onChange={() => handleAnswerSelect(option)}
                 disabled={loading}
               />
@@ -74,7 +71,7 @@ const Quiz = ({ onQuizComplete }) => {
           </li>
         ))}
       </ul>
-      <button onClick={handleNextQuestion} disabled={loading || selectedAnswers[currentQuestion] === null}>
+      <button onClick={handleNextQuestion} disabled={loading || selectedAnswer === null}>
         {loading ? "Checking answer..." : "Next"}
       </button>
 
