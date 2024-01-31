@@ -1,54 +1,60 @@
 // Quiz.js
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+
+const questions = [
+  {
+    id: 1,
+    text: "What is the capital of France?",
+    options: ["Berlin", "Madrid", "Paris", "Rome"],
+    correctAnswer: "Paris",
+  },
+  {
+    id: 2,
+    text: "Which planet is known as the Red Planet?",
+    options: ["Earth", "Mars", "Venus", "Jupiter"],
+    correctAnswer: "Mars",
+  },
+  // Add more questions as needed
+];
 
 const Quiz = ({ onQuizComplete }) => {
-  const history = useHistory();
-  const questions = [
-    {
-      id: 1,
-      text: "What does HTML stand for?",
-      options: ["Hyper Text Markup Language", "High Tech Machine Learning", "Home Tool Markup Language", "Hyperlink and Text Markup Language"],
-      correctAnswer: "Hyper Text Markup Language",
-    },
-    // ...rest of the questions
-  ];
-
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null));
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleAnswerSelect = (answer) => {
-    const updatedAnswers = [...selectedAnswers];
-    updatedAnswers[currentQuestion] = answer;
-    setSelectedAnswers(updatedAnswers);
+    setSelectedAnswer(answer);
   };
 
   const handleNextQuestion = () => {
-    setCurrentQuestion((prevQuestion) => prevQuestion + 1);
-  };
+    // Check if the selected answer is correct
+    const isCorrect = questions[currentQuestion].correctAnswer === selectedAnswer;
 
-  const handleShowScore = () => {
-    history.push("/score", { score: calculateScore(), total: questions.length });
-  };
+    // Log the answer
+    console.log(`Question ${currentQuestion + 1}: ${isCorrect ? 'Correct' : 'Incorrect'}`);
 
-  const calculateScore = () => {
-    const correctAnswers = selectedAnswers.filter((answer, index) => answer === questions[index].correctAnswer);
-    return correctAnswers.length;
+    // Move to the next question or finish the quiz
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+      setSelectedAnswer(null);
+    } else {
+      // Quiz is complete
+      onQuizComplete();
+    }
   };
 
   return (
     <div>
       <h2>{questions[currentQuestion].text}</h2>
       <ul>
-        {questions[currentQuestion].options.map((option) => (
-          <li key={questions[currentQuestion].id}>
+        {questions[currentQuestion].options.map((option, index) => (
+          <li key={index}>
             <label>
               <input
                 type="radio"
                 name="answer"
                 value={option}
-                checked={selectedAnswers[currentQuestion] === option}
+                checked={selectedAnswer === option}
                 onChange={() => handleAnswerSelect(option)}
                 disabled={loading}
               />
@@ -57,17 +63,9 @@ const Quiz = ({ onQuizComplete }) => {
           </li>
         ))}
       </ul>
-
-      {/* Display "Next" or "Show Score" button based on the question */}
-      {currentQuestion === questions.length - 1 ? (
-        <button onClick={handleShowScore} disabled={loading || selectedAnswers[currentQuestion] === null}>
-          {loading ? "Checking answer..." : "Show Score"}
-        </button>
-      ) : (
-        <button onClick={handleNextQuestion} disabled={loading || selectedAnswers[currentQuestion] === null}>
-          {loading ? "Checking answer..." : "Next"}
-        </button>
-      )}
+      <button onClick={handleNextQuestion} disabled={loading || selectedAnswer === null}>
+        {loading ? "Checking answer..." : "Next"}
+      </button>
     </div>
   );
 };
