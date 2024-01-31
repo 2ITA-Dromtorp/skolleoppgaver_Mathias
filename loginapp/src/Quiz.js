@@ -26,7 +26,14 @@ const Quiz = ({ onQuizComplete }) => {
     setSelectedAnswer(answer);
   };
 
-  const handleNextQuestion = () => {
+  const calculateScore = () => {
+    return questions.reduce(
+      (score, question, index) => score + (question.correctAnswer === selectedAnswer[index] ? 1 : 0),
+      0
+    );
+  };
+
+  const handleNextQuestion = async () => {
     // Check if the selected answer is correct
     const isCorrect = questions[currentQuestion].correctAnswer === selectedAnswer;
 
@@ -39,7 +46,21 @@ const Quiz = ({ onQuizComplete }) => {
       setSelectedAnswer(null);
     } else {
       // Quiz is complete
-      onQuizComplete();
+      const score = calculateScore();
+      onQuizComplete(score);
+
+      // Send a POST request with the score
+      const response = await fetch('/api/score', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ score }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to send score');
+      }
     }
   };
 
