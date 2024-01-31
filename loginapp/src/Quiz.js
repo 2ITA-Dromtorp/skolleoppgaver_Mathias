@@ -1,7 +1,9 @@
 // Quiz.js
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 const Quiz = ({ onQuizComplete }) => {
+  const history = useHistory();
   const questions = [
     {
       id: 1,
@@ -15,7 +17,6 @@ const Quiz = ({ onQuizComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null));
   const [loading, setLoading] = useState(false);
-  const [showScore, setShowScore] = useState(false);
 
   const handleAnswerSelect = (answer) => {
     const updatedAnswers = [...selectedAnswers];
@@ -28,7 +29,7 @@ const Quiz = ({ onQuizComplete }) => {
   };
 
   const handleShowScore = () => {
-    setShowScore(true);
+    history.push("/score", { score: calculateScore(), total: questions.length });
   };
 
   const calculateScore = () => {
@@ -66,14 +67,6 @@ const Quiz = ({ onQuizComplete }) => {
         <button onClick={handleNextQuestion} disabled={loading || selectedAnswers[currentQuestion] === null}>
           {loading ? "Checking answer..." : "Next"}
         </button>
-      )}
-
-      {/* Display score if showScore is true */}
-      {showScore && (
-        <div>
-          <h2>Quiz Complete!</h2>
-          <p>Your Score: {calculateScore()} out of {questions.length}</p>
-        </div>
       )}
     </div>
   );
