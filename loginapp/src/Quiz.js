@@ -1,39 +1,21 @@
 // Quiz.js
 import React, { useState } from "react";
+import "./Quiz.css";  // Import the CSS file
 
 const questions = [
   // ... (unchanged)
 ];
 
 const Quiz = ({ onQuizComplete }) => {
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-
-  const handleAnswerSelect = (answer) => {
-    setSelectedAnswer(answer);
-  };
-
-  const handleNextQuestion = () => {
-    const isCorrect = questions[currentQuestion].correctAnswer === selectedAnswer;
-
-    console.log(`Answer to Question ${currentQuestion + 1}: ${isCorrect ? 'Correct' : 'Incorrect'}`);
-
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer(null);
-    } else {
-      onQuizComplete();
-    }
-  };
+  // ... (unchanged)
 
   return (
-    <div style={{ maxWidth: '400px', margin: '20px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f8f8f8' }}>
-      <h2 style={{ fontSize: '18px', marginBottom: '10px' }}>{questions[currentQuestion].text}</h2>
-      <ul style={{ listStyle: 'none', padding: '0' }}>
+    <div className="quiz-container">
+      <h2 className="question-text">{questions[currentQuestion].text}</h2>
+      <ul className="options-list">
         {questions[currentQuestion].options.map((option, index) => (
-          <li key={index} style={{ marginBottom: '8px' }}>
-            <label style={{ display: 'block' }}>
+          <li key={index} className="option-list-item">
+            <label className="option-label">
               <input
                 type="radio"
                 name="answer"
@@ -48,14 +30,7 @@ const Quiz = ({ onQuizComplete }) => {
         ))}
       </ul>
       <button
-        style={{
-          padding: '10px',
-          backgroundColor: '#007bff',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-        }}
+        className="next-button"
         onClick={handleNextQuestion}
         disabled={loading || selectedAnswer === null}
       >
