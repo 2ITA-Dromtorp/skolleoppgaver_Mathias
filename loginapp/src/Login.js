@@ -6,8 +6,8 @@ const Login = () => {
   const [showQuiz, setShowQuiz] = useState(false);
 
   const handleQuizComplete = () => {
-    // Redirect to a website after completing the quiz
-    window.location.href = "https://cornhub.website/";
+    // Update state to hide the quiz
+    setShowQuiz(false);
   };
 
   return (

@@ -4,17 +4,28 @@ import React, { useState } from "react";
 const questions = [
   {
     id: 1,
-    text: "What is the capital of France?",
-    options: ["Berlin", "Madrid", "Paris", "Rome"],
-    correctAnswer: "Paris",
+    text: "What does HTML stand for?",
+    options: ["Hyper Text Markup Language", "High Tech Machine Learning", "Home Tool Markup Language", "Hyperlink and Text Markup Language"],
+    correctAnswer: "Hyper Text Markup Language",
   },
   {
     id: 2,
-    text: "Which planet is known as the Red Planet?",
-    options: ["Earth", "Mars", "Venus", "Jupiter"],
-    correctAnswer: "Mars",
+    text: "Which programming language is known for its use in building interactive web pages?",
+    options: ["Java", "Python", "JavaScript", "C++"],
+    correctAnswer: "JavaScript",
   },
-  // Add more questions as needed
+  {
+    id: 3,
+    text: "What is the purpose of CSS?",
+    options: ["To define the structure of a webpage", "To add interactivity to a webpage", "To style the presentation of a webpage", "To perform calculations in a webpage"],
+    correctAnswer: "To style the presentation of a webpage",
+  },
+  {
+    id: 4,
+    text: "In JavaScript, what is a function?",
+    options: ["A piece of code that performs a specific task", "A way to declare variables", "A type of loop", "A type of array"],
+    correctAnswer: "A piece of code that performs a specific task",
+  },
 ];
 
 const Quiz = ({ onQuizComplete }) => {
