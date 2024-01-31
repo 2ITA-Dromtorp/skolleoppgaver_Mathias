@@ -15,17 +15,19 @@ const Quiz = ({ onQuizComplete }) => {
   ];
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null));
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
 
   const handleAnswerSelect = (answer) => {
-    setSelectedAnswer(answer);
+    const updatedAnswers = [...selectedAnswers];
+    updatedAnswers[currentQuestion] = answer;
+    setSelectedAnswers(updatedAnswers);
   };
 
   const handleNextQuestion = async () => { // Declare this function as async
     // Check if the selected answer is correct
-    const isCorrect = questions[currentQuestion].correctAnswer === selectedAnswer;
+    const isCorrect = questions[currentQuestion].correctAnswer === selectedAnswers[currentQuestion];
 
     // Display a message to the user
     setMessage(isCorrect ? 'Correct!' : 'Incorrect.');
@@ -33,7 +35,6 @@ const Quiz = ({ onQuizComplete }) => {
     // Move to the next question or finish the quiz
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer(null);
       setMessage(null);
     } else {
       // Quiz is complete
@@ -56,7 +57,7 @@ const Quiz = ({ onQuizComplete }) => {
   };
 
   const calculateScore = () => {
-    const correctAnswers = selectedAnswer.filter((answer, index) => answer === questions[index].correctAnswer);
+    const correctAnswers = selectedAnswers.filter((answer, index) => answer === questions[index].correctAnswer);
     return correctAnswers.length;
   };
 
@@ -71,7 +72,7 @@ const Quiz = ({ onQuizComplete }) => {
                 type="radio"
                 name="answer"
                 value={option}
-                checked={selectedAnswer === option}
+                checked={selectedAnswers[currentQuestion] === option}
                 onChange={() => handleAnswerSelect(option)}
                 disabled={loading}
               />
@@ -81,7 +82,7 @@ const Quiz = ({ onQuizComplete }) => {
         ))}
       </ul>
       {message && <p>{message}</p>}
-      <button onClick={handleNextQuestion} disabled={loading || selectedAnswer === null}>
+      <button onClick={handleNextQuestion} disabled={loading || selectedAnswers[currentQuestion] === null}>
         {loading ? "Checking answer..." : "Next"}
       </button>
     </div>
