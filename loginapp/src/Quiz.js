@@ -79,7 +79,7 @@ const Quiz = ({ onQuizComplete }) => {
       </button>
 
       {/* Display score at the end */}
-      {currentQuestion === questions.length && (
+      {currentQuestion === questions.length - 1 && (
         <div>
           <h2>Quiz Complete!</h2>
           <p>Your Score: {calculateScore()} out of {questions.length}</p>
