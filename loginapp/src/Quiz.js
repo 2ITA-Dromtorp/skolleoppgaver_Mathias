@@ -40,8 +40,9 @@ const Quiz = ({ onQuizComplete }) => {
   };
 
   const handleNextQuestion = () => {
-    setCurrentQuestion((prevQuestion) => prevQuestion + 1);
-    if (currentQuestion === questions.length - 1) {
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion((prevQuestion) => prevQuestion + 1);
+    } else {
       // Quiz is complete
       onQuizComplete(selectedAnswers);
     }
