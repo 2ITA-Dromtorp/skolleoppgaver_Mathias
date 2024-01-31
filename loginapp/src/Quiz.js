@@ -30,25 +30,26 @@ const questions = [
 
 const Quiz = ({ onQuizComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null));
   const [loading, setLoading] = useState(false);
 
   const handleAnswerSelect = (answer) => {
-    setSelectedAnswer(answer);
+    const updatedAnswers = [...selectedAnswers];
+    updatedAnswers[currentQuestion] = answer;
+    setSelectedAnswers(updatedAnswers);
   };
 
   const handleNextQuestion = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion((prevQuestion) => prevQuestion + 1);
-      setSelectedAnswer(null);
-    } else {
-      onQuizComplete();
+    setCurrentQuestion((prevQuestion) => prevQuestion + 1);
+    if (currentQuestion === questions.length - 1) {
+      // Quiz is complete
+      onQuizComplete(selectedAnswers);
     }
   };
 
   const calculateScore = () => {
-    const correctAnswers = selectedAnswer === questions[currentQuestion].correctAnswer ? 1 : 0;
-    return correctAnswers;
+    const correctAnswers = selectedAnswers.filter((answer, index) => answer === questions[index].correctAnswer);
+    return correctAnswers.length;
   };
 
   return (
@@ -62,7 +63,7 @@ const Quiz = ({ onQuizComplete }) => {
                 type="radio"
                 name="answer"
                 value={option}
-                checked={selectedAnswer === option}
+                checked={selectedAnswers[currentQuestion] === option}
                 onChange={() => handleAnswerSelect(option)}
                 disabled={loading}
               />
@@ -71,7 +72,7 @@ const Quiz = ({ onQuizComplete }) => {
           </li>
         ))}
       </ul>
-      <button onClick={handleNextQuestion} disabled={loading || selectedAnswer === null}>
+      <button onClick={handleNextQuestion} disabled={loading || selectedAnswers[currentQuestion] === null}>
         {loading ? "Checking answer..." : "Next"}
       </button>
 
