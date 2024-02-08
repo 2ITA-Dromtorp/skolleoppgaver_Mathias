@@ -1,0 +1,18 @@
+.chess-board {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black; /* Add border to the chessboard */
+  }
+  
+  .row {
+    display: flex;
+  }
+  
+  .cell {
+    width: 50px; /* Adjust cell width as needed */
+    height: 50px; /* Adjust cell height as needed */
+    border: 1px solid black; /* Add border to the cell */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
