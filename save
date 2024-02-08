@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
 import "./Quiz.css";
+import axios from "axios";
 
 const Quiz = () => {
   const [questions] = useState([
@@ -60,6 +61,7 @@ const Quiz = () => {
   const handleSubmitAnswer = () => {
     const currentQuestion = questions[currentQuestionIndex];
     const selectedAnswer = selectedOption;
+    const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
 
     fetch("http://localhost:3001/submit-answer", {
       method: "POST",
