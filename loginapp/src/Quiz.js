@@ -1,57 +1,43 @@
-import React, { useState } from "react";
-import "./App.css";
+import React, { useState, useEffect } from "react";
 import "./Quiz.css";
 
-const Quiz = () => {
-  const [questions] = useState([
-    {
-      id: 1,
-      question: "What does HTML stand for?",
-      options: [
-        "Hyper Text Markup Language",
-        "Hyperlinks and Text Markup Language",
-        "Home Tool Markup Language",
-        "Hyperlinks and Text Markup Logic",
-      ],
-      correctAnswer: "Hyper Text Markup Language",
-    },
-    {
-      id: 2,
-      question:
-        'What is the correct way to select an element with the id of "demo" using CSS?',
-      options: ["#demo", ".demo", "element.demo", "*demo"],
-      correctAnswer: "#demo",
-    },
-    {
-      id: 3,
-      question:
-        "Which of the following programming languages is not a compiled language?",
-      options: ["Java", "C++", "Python", "C#"],
-      correctAnswer: "Python",
-    },
-    {
-      id: 4,
-      question: "What is the capital of France?",
-      options: ["Berlin", "Madrid", "Paris", "Rome"],
-      correctAnswer: "Paris",
-    },
-    {
-      id: 5,
-      question: "Who painted the Mona Lisa?",
-      options: [
-        "Vincent van Gogh",
-        "Pablo Picasso",
-        "Leonardo da Vinci",
-        "Michelangelo",
-      ],
-      correctAnswer: "Leonardo da Vinci",
-    },
-  ]);
-
+const Quiz = ({ apiUrl }) => {
+  const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState("");
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
+  const [timer, setTimer] = useState(null); // Timer state
+
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
+
+  useEffect(() => {
+    // Start timer when questions load
+    const countdown = setInterval(() => {
+      setTimer((prevTime) => prevTime - 1);
+    }, 1000);
+    return () => clearInterval(countdown); // Cleanup
+  }, [questions]);
+
+  useEffect(() => {
+    // Handle timer completion
+    if (timer === 0 && !showResult) {
+      handleNextQuestion();
+    }
+  }, [timer, showResult]);
+
+  const fetchQuestions = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/select`);
+      const data = await response.json();
+      setQuestions(data);
+      setTimer(60); // Set initial timer (60 seconds)
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+    }
+  };
 
   const handleOptionChange = (option) => {
     setSelectedOption(option);
@@ -61,7 +47,7 @@ const Quiz = () => {
     const currentQuestion = questions[currentQuestionIndex];
     const selectedAnswer = selectedOption;
 
-    fetch("http://localhost:3001/submit-answer", {
+    fetch(`${apiUrl}/submit-answer`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -76,12 +62,7 @@ const Quiz = () => {
           if (response.correct) {
             setScore(score + 1);
           }
-          if (currentQuestionIndex + 1 < questions.length) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-            setSelectedOption("");
-          } else {
-            setShowResult(true);
-          }
+          handleNextQuestion();
         });
       })
       .catch((error) => {
@@ -89,11 +70,23 @@ const Quiz = () => {
       });
   };
 
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex + 1 < questions.length) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedOption("");
+      setTimer(60); // Reset timer for next question
+    } else {
+      setShowResult(true);
+    }
+  };
+
   const handleRestartQuiz = () => {
     setCurrentQuestionIndex(0);
     setSelectedOption("");
     setScore(0);
     setShowResult(false);
+    setTimer(60);
+    fetchQuestions(); // Fetch questions again for restart
   };
 
   return (
@@ -101,9 +94,10 @@ const Quiz = () => {
       {!showResult ? (
         <div>
           <h2>Question {currentQuestionIndex + 1}</h2>
-          <h3>{questions[currentQuestionIndex].question}</h3>
+          <h3>{questions[currentQuestionIndex]?.question}</h3>
+          <p>Time left: {timer} seconds</p> {/* Display timer */}
           <form>
-            {questions[currentQuestionIndex].options.map((option, index) => (
+            {questions[currentQuestionIndex]?.options.map((option, index) => (
               <div key={index}>
                 <input
                   type="radio"

@@ -1,32 +1,37 @@
 [
-    {
-      "id": 1,
-      "question": "What does HTML stand for?",
-      "options": ["Hyper Text Markup Language", "Hyperlinks and Text Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Logic"],
-      "correctAnswer": "Hyper Text Markup Language"
-    },
-    {
-      "id": 2,
-      "question": "What is the correct way to select an element with the id of 'demo' using CSS?",
-      "options": ["#demo", ".demo", "element.demo", "*demo"],
-      "correctAnswer": "#demo"
-    },
-    {
-      "id": 3,
-      "question": "Which of the following programming languages is not a compiled language?",
-      "options": ["Java", "C++", "Python", "C#"],
-      "correctAnswer": "Python"
-    },
-    {
-      "id": 4,
-      "question": "What is the capital of France?",
-      "options": ["Berlin", "Madrid", "Paris", "Rome"],
-      "correctAnswer": "Paris"
-    },
-    {
-      "id": 5,
-      "question": "Who painted the Mona Lisa?",
-      "options": ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
-      "correctAnswer": "Leonardo da Vinci"
-    }
-  ]
+  {
+    "id": 1,
+    "question": "What is the main device you use to access the internet?",
+    "options": ["Computer", "Smartphone", "Television", "Tablet"],
+    "correctAnswer": "Computer",
+    "difficulty": "easy"
+  },
+  {
+    "id": 2,
+    "question": "What is the name for software that protects your computer from viruses?",
+    "options": ["Antivirus", "Firewall", "Encryption", "Malware"],
+    "correctAnswer": "Antivirus",
+    "difficulty": "easy"
+  },
+  {
+    "id": 3,
+    "question": "What does 'www' stand for in a website address?",
+    "options": ["World Wide Web", "World Water Week", "Wide Width Widget", "Wicked Wacky Walrus"],
+    "correctAnswer": "World Wide Web",
+    "difficulty": "easy"
+  },
+  {
+    "id": 4,
+    "question": "What is the name of the website where you can search for information?",
+    "options": ["Google", "Yahoo", "Facebook", "Twitter"],
+    "correctAnswer": "Google",
+    "difficulty": "easy"
+  },
+  {
+    "id": 5,
+    "question": "What is the term for a small picture or symbol used to represent a company or organization?",
+    "options": ["Logo", "Slogan", "Motto", "Brand"],
+    "correctAnswer": "Logo",
+    "difficulty": "easy"
+  }
+]
