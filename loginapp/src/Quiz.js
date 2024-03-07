@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Quiz.css";
+import Hints from './Hints';
 
 const Quiz = ({ apiUrl }) => {
   const [questions, setQuestions] = useState([]);
@@ -7,22 +8,22 @@ const Quiz = ({ apiUrl }) => {
   const [selectedOption, setSelectedOption] = useState("");
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
-  const [timer, setTimer] = useState(null); // Timer state
+  const [timer, setTimer] = useState(null);
+  const [name, setName] = useState("");
+  const [hintsVisible, setHintsVisible] = useState(false);
 
   useEffect(() => {
     fetchQuestions();
   }, []);
 
   useEffect(() => {
-    // Start timer when questions load
     const countdown = setInterval(() => {
       setTimer((prevTime) => prevTime - 1);
     }, 1000);
-    return () => clearInterval(countdown); // Cleanup
+    return () => clearInterval(countdown);
   }, [questions]);
 
   useEffect(() => {
-    // Handle timer completion
     if (timer === 0 && !showResult) {
       handleNextQuestion();
     }
@@ -33,7 +34,7 @@ const Quiz = ({ apiUrl }) => {
       const response = await fetch(`${apiUrl}/select`);
       const data = await response.json();
       setQuestions(data);
-      setTimer(60); // Set initial timer (60 seconds)
+      setTimer(60);
     } catch (error) {
       console.error("Error fetching questions:", error);
     }
@@ -43,38 +44,40 @@ const Quiz = ({ apiUrl }) => {
     setSelectedOption(option);
   };
 
-  const handleSubmitAnswer = () => {
+  const handleSubmitAnswer = async () => {
     const currentQuestion = questions[currentQuestionIndex];
     const selectedAnswer = selectedOption;
 
-    fetch(`${apiUrl}/submit-answer`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        selectedAnswer,
-        currentQuestion: currentQuestion.id,
-      }),
-    })
-      .then((res) => {
-        res.json().then((response) => {
-          if (response.correct) {
-            setScore(score + 1);
-          }
-          handleNextQuestion();
-        });
-      })
-      .catch((error) => {
-        console.error("Error submitting answer:", error);
+    try {
+      const response = await fetch(`${apiUrl}/submit-answer`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          selectedAnswer,
+          currentQuestion: currentQuestion.id,
+        }),
       });
+      const data = await response.json();
+      if (response.ok) {
+        if (data.correct) {
+          setScore(score + 1);
+        }
+        handleNextQuestion();
+      } else {
+        console.error('Failed to submit answer');
+      }
+    } catch (error) {
+      console.error('Error submitting answer:', error);
+    }
   };
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex + 1 < questions.length) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedOption("");
-      setTimer(60); // Reset timer for next question
+      setTimer(60);
     } else {
       setShowResult(true);
     }
@@ -86,7 +89,25 @@ const Quiz = ({ apiUrl }) => {
     setScore(0);
     setShowResult(false);
     setTimer(60);
-    fetchQuestions(); // Fetch questions again for restart
+    fetchQuestions();
+  };
+
+  const handleSubmitLeaderboard = async () => {
+    try {
+      await fetch(`${apiUrl}/leaderboard`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, score }),
+      });
+    } catch (error) {
+      console.error("Error submitting to leaderboard:", error);
+    }
+  };
+
+  const handleHintClick = () => {
+    setHintsVisible(!hintsVisible);
   };
 
   return (
@@ -95,7 +116,11 @@ const Quiz = ({ apiUrl }) => {
         <div>
           <h2>Question {currentQuestionIndex + 1}</h2>
           <h3>{questions[currentQuestionIndex]?.question}</h3>
-          <p>Time left: {timer} seconds</p> {/* Display timer */}
+          <p>Time left: {timer} seconds</p>
+          <button onClick={handleHintClick}>
+            {hintsVisible ? "Hide Hint" : "Show Hint"}
+          </button>
+          {hintsVisible && <Hints apiUrl={apiUrl} questionId={questions[currentQuestionIndex]?.id} />}
           <form>
             {questions[currentQuestionIndex]?.options.map((option, index) => (
               <div key={index}>
@@ -119,6 +144,13 @@ const Quiz = ({ apiUrl }) => {
           <p>
             Your score: {score} out of {questions.length}
           </p>
+          <form onSubmit={handleSubmitLeaderboard}>
+            <label>
+              Enter your name:
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+            </label>
+            <button type="submit">Submit to Leaderboard</button>
+          </form>
           <button onClick={handleRestartQuiz}>Restart Quiz</button>
         </div>
       )}

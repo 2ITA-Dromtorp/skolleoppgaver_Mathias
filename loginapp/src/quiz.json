@@ -4,34 +4,39 @@
     "question": "What is the main device you use to access the internet?",
     "options": ["Computer", "Smartphone", "Television", "Tablet"],
     "correctAnswer": "Computer",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "hint": "Think about the device you're likely using right now to read this question."
   },
   {
     "id": 2,
     "question": "What is the name for software that protects your computer from viruses?",
     "options": ["Antivirus", "Firewall", "Encryption", "Malware"],
     "correctAnswer": "Antivirus",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "hint": "This software specifically targets harmful programs that can infect your computer."
   },
   {
     "id": 3,
     "question": "What does 'www' stand for in a website address?",
     "options": ["World Wide Web", "World Water Week", "Wide Width Widget", "Wicked Wacky Walrus"],
     "correctAnswer": "World Wide Web",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "hint": "It's the part of the web address that indicates the location of the website."
   },
   {
     "id": 4,
     "question": "What is the name of the website where you can search for information?",
     "options": ["Google", "Yahoo", "Facebook", "Twitter"],
     "correctAnswer": "Google",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "hint": "It's the most popular search engine used worldwide."
   },
   {
     "id": 5,
     "question": "What is the term for a small picture or symbol used to represent a company or organization?",
     "options": ["Logo", "Slogan", "Motto", "Brand"],
     "correctAnswer": "Logo",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "hint": "It's a graphical symbol that represents the identity of a company or organization."
   }
 ]
