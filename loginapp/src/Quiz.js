@@ -34,7 +34,7 @@ const Quiz = ({ apiUrl }) => {
       const response = await fetch(`${apiUrl}/select`);
       const data = await response.json();
       setQuestions(data);
-      setTimer(60);
+      setTimer(30);
     } catch (error) {
       console.error("Error fetching questions:", error);
     }
@@ -77,7 +77,7 @@ const Quiz = ({ apiUrl }) => {
     if (currentQuestionIndex + 1 < questions.length) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedOption("");
-      setTimer(60);
+      setTimer(30);
     } else {
       setShowResult(true);
     }
@@ -88,7 +88,7 @@ const Quiz = ({ apiUrl }) => {
     setSelectedOption("");
     setScore(0);
     setShowResult(false);
-    setTimer(60);
+    setTimer(30);
     fetchQuestions();
   };
 
