@@ -18,7 +18,7 @@ app.post("/leaderboard", (req, res) => {
   const { name, score } = req.body;
   leaderboardData.push({ name, score });
   leaderboardData.sort((a, b) => b.score - a.score);
-  leaderboardData = leaderboardData.slice(0, 10); // Limit to top 10
+  leaderboardData = leaderboardData.slice(0, 5); // Limits to top 5
   res.sendStatus(200);
 });
 

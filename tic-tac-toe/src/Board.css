@@ -1,0 +1,26 @@
+.board-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 4px;
+    background-color: #555;
+    border: 8px solid #333;
+    border-radius: 12px;
+    padding: 8px;
+  }
+  
+  .status {
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: #fff;
+    background-color: #333;
+    padding: 8px;
+    border-radius: 4px;
+  }
+  

@@ -1,0 +1,22 @@
+.square {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ddd;
+    border: 2px solid #aaa;
+    font-size: 36px;
+    font-weight: bold;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .square:hover {
+    background-color: #ccc;
+  }
+  
+  .square:focus {
+    outline: none;
+  }
+  

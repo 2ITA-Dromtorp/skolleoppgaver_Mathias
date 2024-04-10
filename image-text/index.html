@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Image</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="instructions" style="display: none;">
+        <h2>Instructions</h2>
+        <ul>
+            <li>Drag and drop an image onto the box below.</li>
+            <li>Alternatively, click the "Add File" button to choose an image from your device.</li>
+            <li>Click anywhere on the image to add text.</li>
+            <li>Click and drag the text to move it around.</li>
+            <li>You can resize the text by dragging its corners.</li>
+        </ul>
+    </div>
+    <button onclick="toggleInstructions()">Help</button> <!-- Help button -->
+    <div id="drop-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+        <p>Drag an image here</p>
+        <button onclick="openFileInput()">Add File</button>
+    </div>
+    <input type="file" id="fileElem" accept="image/*" style="display: none;" onchange="handleFileInputChange(event)">
+    <div id="text-options" style="display: none;">
+        <label for="font-family">Font Family:</label>
+        <select id="font-family" onchange="updateTextStyles()">
+            <option value="Arial">Arial</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <!-- Add more font options if needed -->
+        </select>
+        <label for="font-size">Font Size:</label>
+        <input type="number" id="font-size" value="16" min="1" onchange="updateTextStyles()">
+        <label for="font-color">Font Color:</label>
+        <input type="color" id="font-color" value="#000000" onchange="updateTextStyles()">
+        <!-- Add more text styling options as needed -->
+    </div>
+    <script src="script.js"></script>
+    <script>
+        function toggleInstructions() {
+            const instructionsDiv = document.getElementById('instructions');
+            instructionsDiv.style.display = (instructionsDiv.style.display === 'none') ? 'block' : 'none';
+        }
+
+        function updateTextStyles() {
+            const fontFamily = document.getElementById("font-family").value;
+            const fontSize = document.getElementById("font-size").value + "px";
+            const fontColor = document.getElementById("font-color").value;
+            const textElements = document.querySelectorAll("#drop-area span");
+
+            textElements.forEach(function(span) {
+                span.style.fontFamily = fontFamily;
+                span.style.fontSize = fontSize;
+                span.style.color = fontColor;
+            });
+        }
+    </script>
+</body>
+</html>

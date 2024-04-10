@@ -1,24 +1,25 @@
 import { useState } from "react";
 import axios from "axios";
-import './table_style.css';
+import './table_style.css'; // Du har en stilarkfil her, så det ser ut til at du har CSS-stiler for tabellen din
 
 export default function Insert() {
-  const [elev, setElev] = useState({})
+  const [elev, setElev] = useState({}); // State for å lagre elevdataene fra skjemaet
+
+  // Funksjon for å lagre elevdataene ved innsending av skjemaet
   const save = event => {
-    console.debug("Save called");    
-    event.preventDefault();
+    event.preventDefault(); // Forhindrer standardoppførselen til skjemaet (sideomlasting)
 
     axios
-    .post("http://localhost:3001", elev)
-    .then(response => {
-      console.log("Ny elev lagret", response)
-    })
-    .catch(error => {
-      console.log(error);
-      event.preventDefault();
-    });
+      .post("http://localhost:3001", elev) // Sender POST-forespørsel til backend-serveren med elevdataene
+      .then(response => {
+        console.log("Ny elev lagret", response.data); // Logger responsen fra serveren
+      })
+      .catch(error => {
+        console.log(error); // Logger eventuelle feil som oppstår underveis
+      });
   };
 
+  // Funksjon for å oppdatere state når inputverdiene endres
   const handleChange = event => {
     setElev({
       ...elev,
@@ -26,46 +27,41 @@ export default function Insert() {
     });
   };
 
+  // Returnerer et skjema for å legge til en ny elev
   return (
     <form onSubmit={save}>
       <label>
         Fornavn:
         <input type="text" name="Fornavn" onChange={handleChange} />
-        {elev.Fornavn}
       </label>
       <br />
       <label>
         Etternavn:
         <input type="text" name="Etternavn" onChange={handleChange} />
-        {elev.Etternavn}
       </label>
       <br />
       <label>
         DatamaskinID:
         <input type="text" name="DatamaskinID" onChange={handleChange} />
-        {elev.DatamaskinID}
-        </label>
+      </label>
       <br />
       <label>
         Hobby:
         <input type="text" name="Hobby" onChange={handleChange} />
-        {elev.Hobby}
-        </label>
+      </label>
       <br />
       <label>
         Klasse:
         <input type="text" name="Klasse" onChange={handleChange} />
-        {elev.Klasse}
-        </label>
+      </label>
       <br />
       <label>
         Kjønn:
         <input type="text" name="Kjonn" onChange={handleChange} />
-        {elev.Kjonn}
-        </label>
+      </label>
       <br />
 
-      <input type="submit" value="Save" />
+      <input type="submit" value="Lagre" /> {/* Knapp for å sende skjemaet */}
     </form>
   );
 }
