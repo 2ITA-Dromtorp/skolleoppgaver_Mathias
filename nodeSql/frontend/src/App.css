@@ -13,9 +13,10 @@ body {
 .container {
   background-color: #333333;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
   padding: 40px;
-  width: 400px;
+  width: 900px;
+  max-width: 90%;
 }
 
 .form-group {
@@ -24,8 +25,9 @@ body {
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   font-weight: bold;
+  color: #dddddd;
 }
 
 input[type="text"],
@@ -49,6 +51,8 @@ button {
   border-radius: 4px;
   cursor: pointer;
   width: 100%;
+  font-size: 16px;
+  transition: background-color 0.3s;
 }
 
 button:hover {
@@ -58,4 +62,44 @@ button:hover {
 .error-message {
   color: #ff0000;
   margin-top: 5px;
+}
+
+.equipment-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.equipment-item {
+  background-color: #444444;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.equipment-item h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.equipment-item p {
+  font-size: 16px;
+  color: #dddddd;
+  margin-bottom: 15px;
+}
+
+.equipment-item button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.equipment-item button:hover {
+  background-color: #45a049;
 }

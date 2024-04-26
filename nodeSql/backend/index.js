@@ -99,12 +99,25 @@ app.get('/equipment', (req, res) => {
 app.post('/borrow', (req, res) => {
   const { ElevID, UtstyrID } = req.body;
   const borrowQuery = 'INSERT INTO utlån (ElevID, UtstyrID, Utlånsdato) VALUES (?, ?, NOW())';
+  const decrementAvailabilityQuery = 'UPDATE Utstyr SET Tilgjengelig = Tilgjengelig - 1 WHERE UtstyrID = ? AND Tilgjengelig > 0';
+
   connection.query(borrowQuery, [ElevID, UtstyrID], (error, result) => {
     if (error) {
       console.error('Error borrowing equipment:', error);
       res.status(500).json({ message: 'Internal server error' });
     } else {
-      res.status(200).json({ message: 'Equipment borrowed successfully' });
+      connection.query(decrementAvailabilityQuery, [UtstyrID], (decError, decResult) => {
+        if (decError) {
+          console.error('Error decrementing availability:', decError);
+          res.status(500).json({ message: 'Internal server error' });
+        } else {
+          if (decResult.affectedRows === 0) {
+            res.status(404).json({ message: 'No available equipment left' });
+          } else {
+            res.status(200).json({ message: 'Equipment borrowed successfully' });
+          }
+        }
+      });
     }
   });
 });
@@ -113,12 +126,21 @@ app.post('/borrow', (req, res) => {
 app.post('/return', (req, res) => {
   const { UtlånID } = req.body;
   const returnQuery = 'UPDATE Utlån SET Returdato = NOW() WHERE UtlånID = ?';
+  const incrementAvailabilityQuery = 'UPDATE Utstyr SET Tilgjengelig = Tilgjengelig + 1 WHERE UtstyrID = (SELECT UtstyrID FROM Utlån WHERE UtlånID = ?)';
+
   connection.query(returnQuery, [UtlånID], (error, result) => {
     if (error) {
       console.error('Error returning equipment:', error);
       res.status(500).json({ message: 'Internal server error' });
     } else {
-      res.status(200).json({ message: 'Equipment returned successfully' });
+      connection.query(incrementAvailabilityQuery, [UtlånID], (incError, incResult) => {
+        if (incError) {
+          console.error('Error incrementing availability:', incError);
+          res.status(500).json({ message: 'Internal server error' });
+        } else {
+          res.status(200).json({ message: 'Equipment returned successfully' });
+        }
+      });
     }
   });
 });
