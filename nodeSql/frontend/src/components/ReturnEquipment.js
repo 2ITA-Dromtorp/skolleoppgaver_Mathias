@@ -37,15 +37,19 @@ function ReturnEquipment(props) {
   return (
     <div className="return-equipment">
       <div className="container">
-        <h1>Borrowed Equipment</h1> {}
+        <h1>Borrowed Equipment</h1>
         <div className="borrowed-equipment-list">
-          {borrowedEquipment.map((item) => (
-            <div key={item.UtlånID} className="borrowed-equipment-item">
-              <h2>{item.Type}</h2>
-              <p>{item.Spesifikasjoner}</p>
-              <button onClick={() => onReturnClicked(item)}>Return</button>
-            </div>
-          ))}
+          {borrowedEquipment.length === 0 ? (
+            <p>You have nothing to return.</p>
+          ) : (
+            borrowedEquipment.map((item) => (
+              <div key={item.UtlånID} className="borrowed-equipment-item">
+                <h2>{item.Type}</h2>
+                <p>{item.Spesifikasjoner}</p>
+                <button onClick={() => onReturnClicked(item)}>Return</button>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
