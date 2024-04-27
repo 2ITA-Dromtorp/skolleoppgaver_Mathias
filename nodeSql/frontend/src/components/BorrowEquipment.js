@@ -3,7 +3,6 @@ import axios from 'axios';
 
 function BorrowEquipment(props) {
   const [equipment, setEquipment] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     fetchEquipmentData();
@@ -25,41 +24,29 @@ function BorrowEquipment(props) {
         ElevID: props.elevId,
         UtstyrID: item.UtstyrID
       });
-      setErrorMessage(response.data.message);
-      fetchEquipmentData(); // Refresh equipment data after borrowing
+      if (response.status === 200) {
+        fetchEquipmentData(); // Refresh equipment list after successful borrowing
+      } else {
+        console.error('Failed to borrow equipment:', response.data.message);
+      }
     } catch (error) {
       console.error('Error borrowing equipment:', error.message);
-    }
-  };
-
-  const onReturnClicked = async (UtlånID) => {
-    console.log(`Returning equipment with ID: ${UtlånID}`);
-    try {
-      const response = await axios.post('http://localhost:3001/return', { UtlånID });
-      setErrorMessage(response.data.message);
-      fetchEquipmentData(); // Refresh equipment data after returning
-    } catch (error) {
-      console.error('Error returning equipment:', error.message);
     }
   };
 
   return (
     <div className="borrow-equipment">
       <h1>Borrow Equipment Page</h1>
-      <p>{errorMessage}</p>
       <div className="equipment-list">
         {equipment.map((item) => (
           <div key={item.UtstyrID} className="equipment-item">
             <h2>{item.Type}</h2>
             <p>{item.Spesifikasjoner}</p>
-            {item.Tilgjengelig > 0 ? (
+            {item.Tilgjengelig ? (
               <button onClick={() => onBorrowClicked(item)}>Borrow</button>
             ) : (
-              <p>No available equipment left</p>
+              <p>This item is currently unavailable</p>
             )}
-            {item.Tilgjengelig < item.TotaltAntall ? (
-              <button onClick={() => onReturnClicked(item.UtlånID)}>Return</button>
-            ) : null}
           </div>
         ))}
       </div>

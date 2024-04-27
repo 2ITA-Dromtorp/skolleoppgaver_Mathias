@@ -98,24 +98,23 @@ app.get('/equipment', (req, res) => {
 // Endpoint for borrowing equipment
 app.post('/borrow', (req, res) => {
   const { ElevID, UtstyrID } = req.body;
-  const borrowQuery = 'INSERT INTO utlån (ElevID, UtstyrID, Utlånsdato) VALUES (?, ?, NOW())';
-  const decrementAvailabilityQuery = 'UPDATE Utstyr SET Tilgjengelig = Tilgjengelig - 1 WHERE UtstyrID = ? AND Tilgjengelig > 0';
-
-  connection.query(borrowQuery, [ElevID, UtstyrID], (error, result) => {
+  const borrowQuery = 'UPDATE Utstyr SET Tilgjengelig = Tilgjengelig - 1 WHERE UtstyrID = ? AND Tilgjengelig > 0';
+  connection.query(borrowQuery, [UtstyrID], (error, result) => {
     if (error) {
       console.error('Error borrowing equipment:', error);
       res.status(500).json({ message: 'Internal server error' });
+    } else if (result.affectedRows === 0) {
+      // No available equipment
+      res.status(400).json({ message: 'No available equipment' });
     } else {
-      connection.query(decrementAvailabilityQuery, [UtstyrID], (decError, decResult) => {
-        if (decError) {
-          console.error('Error decrementing availability:', decError);
+      // Equipment borrowed successfully
+      const insertQuery = 'INSERT INTO Utlån (ElevID, UtstyrID, Utlånsdato) VALUES (?, ?, NOW())';
+      connection.query(insertQuery, [ElevID, UtstyrID], (insertError, insertResult) => {
+        if (insertError) {
+          console.error('Error inserting into Utlån table:', insertError);
           res.status(500).json({ message: 'Internal server error' });
         } else {
-          if (decResult.affectedRows === 0) {
-            res.status(404).json({ message: 'No available equipment left' });
-          } else {
-            res.status(200).json({ message: 'Equipment borrowed successfully' });
-          }
+          res.status(200).json({ message: 'Equipment borrowed successfully' });
         }
       });
     }
@@ -124,23 +123,56 @@ app.post('/borrow', (req, res) => {
 
 // Endpoint for returning equipment
 app.post('/return', (req, res) => {
-  const { UtlånID } = req.body;
-  const returnQuery = 'UPDATE Utlån SET Returdato = NOW() WHERE UtlånID = ?';
-  const incrementAvailabilityQuery = 'UPDATE Utstyr SET Tilgjengelig = Tilgjengelig + 1 WHERE UtstyrID = (SELECT UtstyrID FROM Utlån WHERE UtlånID = ?)';
+  const { UtlånID, UtstyrID } = req.body;
 
-  connection.query(returnQuery, [UtlånID], (error, result) => {
-    if (error) {
-      console.error('Error returning equipment:', error);
+  // Check if the item has already been returned
+  const checkQuery = 'SELECT Returdato FROM Utlån WHERE UtlånID = ?';
+  connection.query(checkQuery, [UtlånID], (checkError, checkResult) => {
+    if (checkError) {
+      console.error('Error checking return status:', checkError);
       res.status(500).json({ message: 'Internal server error' });
     } else {
-      connection.query(incrementAvailabilityQuery, [UtlånID], (incError, incResult) => {
-        if (incError) {
-          console.error('Error incrementing availability:', incError);
-          res.status(500).json({ message: 'Internal server error' });
-        } else {
-          res.status(200).json({ message: 'Equipment returned successfully' });
-        }
-      });
+      if (checkResult.length === 0 || checkResult[0].Returdato !== null) {
+        res.status(400).json({ message: 'Item has already been returned' });
+      } else {
+        // Update the database to mark the item as returned
+        const returnQuery = 'UPDATE Utstyr SET Tilgjengelig = Tilgjengelig + 1 WHERE UtstyrID = ?';
+        connection.query(returnQuery, [UtstyrID], (error, result) => {
+          if (error) {
+            console.error('Error returning equipment:', error);
+            res.status(500).json({ message: 'Internal server error' });
+          } else {
+            const updateQuery = 'UPDATE Utlån SET Returdato = NOW() WHERE UtlånID = ?';
+            connection.query(updateQuery, [UtlånID], (updateError, updateResult) => {
+              if (updateError) {
+                console.error('Error updating Utlån table:', updateError);
+                res.status(500).json({ message: 'Internal server error' });
+              } else {
+                res.status(200).json({ message: 'Equipment returned successfully' });
+              }
+            });
+          }
+        });
+      }
+    }
+  });
+});
+
+// Endpoint for fetching borrowed equipment for a specific student ID
+app.get('/borrowed/:elevId', (req, res) => {
+  const elevId = req.params.elevId;
+  const query = `
+    SELECT Utstyr.*, Utlån.UtlånID, Utlån.Utlånsdato, Utlån.Returdato, Utlån.Godkjent
+    FROM Utstyr
+    JOIN Utlån ON Utstyr.UtstyrID = Utlån.UtstyrID
+    WHERE Utlån.ElevID = ? AND Utlån.Returdato IS NULL AND Utlån.Godkjent = 0
+  `;
+  connection.query(query, [elevId], (error, results) => {
+    if (error) {
+      console.error('Error querying database:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    } else {
+      res.status(200).json(results);
     }
   });
 });

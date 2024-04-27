@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import RegistrationForm from './components/RegistrationForm';
 import BorrowEquipment from './components/BorrowEquipment';
+import ReturnEquipment from './components/ReturnEquipment'; // Import the ReturnEquipment component
 
 function App() {
   const [elevId, setElevId] = useState('');
@@ -9,6 +10,7 @@ function App() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
+  const [returnPageVisible, setReturnPageVisible] = useState(false); // State to manage visibility of the return page
 
   const handleLogin = async () => {
     try {
@@ -34,6 +36,11 @@ function App() {
     }
   };
 
+  // Function to toggle visibility of the return page
+  const toggleReturnPage = () => {
+    setReturnPageVisible(!returnPageVisible);
+  };
+
   return (
     <div className="App">
       {!loggedIn ? (
@@ -49,7 +56,19 @@ function App() {
           <RegistrationForm />
         </div>
       ) : (
-        <BorrowEquipment elevId={elevId}  />
+        <div>
+          {/* If returnPageVisible is true, render the ReturnEquipment component */}
+          {returnPageVisible ? (
+            <ReturnEquipment elevId={elevId} />
+          ) : (
+            <BorrowEquipment elevId={elevId} />
+          )}
+
+          {/* Button to toggle visibility of the return page */}
+          <button onClick={toggleReturnPage}>
+            {returnPageVisible ? 'Hide Return Equipment' : 'Return Equipment'}
+          </button>
+        </div>
       )}
     </div>
   );
