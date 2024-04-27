@@ -142,7 +142,7 @@ app.post('/return', (req, res) => {
             console.error('Error returning equipment:', error);
             res.status(500).json({ message: 'Internal server error' });
           } else {
-            const updateQuery = 'UPDATE Utlån SET Returdato = NOW() WHERE UtlånID = ?';
+            const updateQuery = 'UPDATE Utlån SET Returdato = NOW(), Godkjent = 1 WHERE UtlånID = ?';
             connection.query(updateQuery, [UtlånID], (updateError, updateResult) => {
               if (updateError) {
                 console.error('Error updating Utlån table:', updateError);

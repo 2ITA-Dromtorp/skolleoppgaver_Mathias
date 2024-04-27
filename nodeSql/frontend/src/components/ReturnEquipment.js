@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './ReturnEquipment.css'; // Import the CSS file
 
 function ReturnEquipment(props) {
   const [borrowedEquipment, setBorrowedEquipment] = useState([]);
@@ -35,15 +36,17 @@ function ReturnEquipment(props) {
 
   return (
     <div className="return-equipment">
-      <h1>Return Equipment Page</h1>
-      <div className="borrowed-equipment-list">
-        {borrowedEquipment.map((item) => (
-          <div key={item.UtlånID} className="borrowed-equipment-item">
-            <h2>{item.Type}</h2>
-            <p>{item.Spesifikasjoner}</p>
-            <button onClick={() => onReturnClicked(item)}>Return</button>
-          </div>
-        ))}
+      <div className="container">
+        <h1>Borrowed Equipment</h1> {}
+        <div className="borrowed-equipment-list">
+          {borrowedEquipment.map((item) => (
+            <div key={item.UtlånID} className="borrowed-equipment-item">
+              <h2>{item.Type}</h2>
+              <p>{item.Spesifikasjoner}</p>
+              <button onClick={() => onReturnClicked(item)}>Return</button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
