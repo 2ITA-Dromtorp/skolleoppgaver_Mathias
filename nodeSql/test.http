@@ -1,0 +1,54 @@
+# @name login
+POST http://localhost:3001/login
+Content-Type: application/json
+
+{
+    "username": "elev1",
+    "password": "passord1"
+}
+
+###
+@authToken = {{login.response.body.token}}
+
+POST http://localhost:3001/register
+Content-Type: application/json
+
+{
+    "username": "TEST2",
+    "password": "passord1",
+    "firstName": "test",
+    "lastName": "elev1",
+    "phoneNumber": "86868686"
+}
+
+###
+GET http://localhost:3001/equipment
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+POST http://localhost:3001/borrow
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "UtstyrID": 8
+}
+
+
+###
+GET http://localhost:3001/borrowed/2
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
+
+###
+POST http://localhost:3001/return
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "UtstyrID": 1,
+    "UtlånID": 1
+}

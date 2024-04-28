@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 
 function RegistrationForm() {
   const [formData, setFormData] = useState({
-    brukernavn: '',
-    passord: '',
-    navn: '',
-    klasse: '',
-    pårørende: '',
-    telefonnummer: ''
+    firstName: '',
+    lastName: '',
+    username: '',
+    password: '',
+    phoneNumber: ''
   });
 
   const handleChange = (e) => {
@@ -23,12 +22,11 @@ function RegistrationForm() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          brukernavn: formData.brukernavn,
-          passord: formData.passord,
-          navn: formData.navn,
-          klasse: formData.klasse,
-          pårørende: formData.pårørende,
-          telefonnummer: formData.telefonnummer
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          username: formData.username,
+          password: formData.password,
+          phoneNumber: formData.phoneNumber
         })
       });
       const data = await response.json();
@@ -40,12 +38,11 @@ function RegistrationForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" name="brukernavn" placeholder="brukernavn" value={formData.brukernavn} onChange={handleChange} />
-      <input type="password" name="passord" placeholder="passord" value={formData.passord} onChange={handleChange} />
-      <input type="text" name="navn" placeholder="Name" value={formData.navn} onChange={handleChange} />
-      <input type="text" name="klasse" placeholder="klasse" value={formData.klasse} onChange={handleChange} />
-      <input type="text" name="pårørende" placeholder="pårørende" value={formData.pårørende} onChange={handleChange} />
-      <input type="text" name="telefonnummer" placeholder="telefonnummer" value={formData.telefonnummer} onChange={handleChange} />
+      <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} />
+      <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
+      <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} />
+      <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} />
+      <input type="text" name="phoneNumber" placeholder="Phone Number" value={formData.phoneNumber} onChange={handleChange} />
       <button type="submit">Register</button>
     </form>
   );

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from './components/auth/AuthProvider';
 import './App.css';
 import RegistrationForm from './components/RegistrationForm';
 import BorrowEquipment from './components/BorrowEquipment';
@@ -11,25 +12,21 @@ function App() {
   const [message, setMessage] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [returnPageVisible, setReturnPageVisible] = useState(false); // State to manage visibility of the return page
+const auth = useAuth();
+
+  useEffect(() => {
+    if (auth?.isTokenValid?.(auth.token)) {
+      setElevId(auth.user.id);
+      setLoggedIn(true);
+      }
+  }, [auth]);
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3001/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-      });
+      await auth.loginAction({username: username, password: password});
+      setElevId(auth.user.id);
+      setLoggedIn(true);
 
-      const data = await response.json();
-      setMessage(data.message);
-      setElevId(data.user.ElevID);
-
-      // If login is successful, setLoggedIn to true
-      if (response.ok) {
-        setLoggedIn(true);
-      }
     } catch (error) {
       console.error('Error during login:', error.message);
       setMessage('Failed to log in');

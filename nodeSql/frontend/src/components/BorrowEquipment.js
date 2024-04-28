@@ -1,8 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useAuth } from "../components/auth/AuthProvider";
+
+const createAxiosConfig = (token) => {
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
 
 function BorrowEquipment(props) {
   const [equipment, setEquipment] = useState([]);
+  const { user, token } = useAuth();
 
   useEffect(() => {
     fetchEquipmentData();
@@ -10,27 +20,33 @@ function BorrowEquipment(props) {
 
   const fetchEquipmentData = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/equipment');
+      const response = await axios.get(
+        `http://localhost:3001/equipment`,
+        createAxiosConfig(token)
+      );
       setEquipment(response.data);
     } catch (error) {
-      console.error('Error fetching equipment data:', error.message);
+      console.error("Error fetching equipment data:", error.message);
     }
   };
 
   const onBorrowClicked = async (item) => {
-    console.log(`Student ID ${props.elevId} Borrowing equipment with ID: ${item.UtstyrID}`);
+    console.log(
+      `Student ID ${props.elevId} Borrowing equipment with ID: ${item.id}`
+    );
     try {
-      const response = await axios.post('http://localhost:3001/borrow', {
-        ElevID: props.elevId,
-        UtstyrID: item.UtstyrID
-      });
-      if (response.status === 200) {
-        fetchEquipmentData(); // Refresh equipment list after successful borrowing
-      } else {
-        console.error('Failed to borrow equipment:', response.data.message);
-      }
+      await axios.post(
+        "http://localhost:3001/borrow",
+        {
+          ElevID: props.elevId,
+          UtstyrID: item.id,
+        },
+        createAxiosConfig(token)
+      );
+
+      await fetchEquipmentData();
     } catch (error) {
-      console.error('Error borrowing equipment:', error.message);
+      console.error("Error borrowing equipment:", error.message);
     }
   };
 
@@ -39,10 +55,10 @@ function BorrowEquipment(props) {
       <h1>Borrow Equipment Page</h1>
       <div className="equipment-list">
         {equipment.map((item) => (
-          <div key={item.UtstyrID} className="equipment-item">
-            <h2>{item.Type}</h2>
-            <p>{item.Spesifikasjoner}</p>
-            {item.Tilgjengelig ? (
+          <div key={item.id} className="equipment-item">
+            <h2>{item.name}</h2>
+            <p>{item.type}</p>
+            {item.available ? (
               <button onClick={() => onBorrowClicked(item)}>Borrow</button>
             ) : (
               <p>This item is currently unavailable</p>
