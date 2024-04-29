@@ -4,34 +4,43 @@ import './App.css';
 import RegistrationForm from './components/RegistrationForm';
 import BorrowEquipment from './components/BorrowEquipment';
 import ReturnEquipment from './components/ReturnEquipment'; // Import the ReturnEquipment component
+import { LogoutButton } from "./components/auth/LogoutButton";
 
 function App() {
   const [elevId, setElevId] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
   const [returnPageVisible, setReturnPageVisible] = useState(false); // State to manage visibility of the return page
 const auth = useAuth();
 
   useEffect(() => {
-    if (auth?.isTokenValid?.(auth.token)) {
+    if (auth?.isTokenValid()) {
       setElevId(auth.user.id);
-      setLoggedIn(true);
       }
   }, [auth]);
 
   const handleLogin = async () => {
     try {
       await auth.loginAction({username: username, password: password});
-      setElevId(auth.user.id);
-      setLoggedIn(true);
+      if (auth.isTokenValid()) {
+        setElevId(auth.user.id);
+      }
+      else {
+        setElevId(null);
+      }
 
     } catch (error) {
       console.error('Error during login:', error.message);
-      setMessage('Failed to log in');
     }
   };
+
+  const handleLogout = () => {
+    auth.logOut();
+    setElevId(null);
+    setPassword("");
+    setUsername("");
+    setReturnPageVisible(false);
+  }
 
   // Function to toggle visibility of the return page
   const toggleReturnPage = () => {
@@ -40,13 +49,12 @@ const auth = useAuth();
 
   return (
     <div className="App">
-      {!loggedIn ? (
+      {!auth?.isTokenValid() ? (
         <div>
           <h1>Login</h1>
           <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
           <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button onClick={handleLogin}>Login</button>
-          <p>{message}</p>
 
           {/* Registration Form */}
           <h2>Registration</h2>
@@ -54,6 +62,7 @@ const auth = useAuth();
         </div>
       ) : (
         <div>
+          <LogoutButton onLogout={handleLogout} />
           {/* If returnPageVisible is true, render the ReturnEquipment component */}
           {returnPageVisible ? (
             <ReturnEquipment elevId={elevId} />
