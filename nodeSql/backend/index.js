@@ -9,6 +9,7 @@ const { expressjwt } = require("express-jwt");
 const app = express();
 const port = 3001;
 const jwtSecret = "hdgciewfddstdfgjjffdsdsdtfdhjmkdsresadhfj";
+const saltRounds = 10; // Define the salt rounds for bcrypt hashing
 
 const checkIfAuthenticated = expressjwt({
   secret: jwtSecret,
@@ -33,41 +34,30 @@ app.use(async (req, res, next) => {
   }
 });
 
-// connection.connect((err) => {
-//   if (err) {
-//     console.error('Error connecting to database: ' + err.stack);
-//     return;
-//   }
-//   console.log('Connected to database as id ' + connection.threadId);
-// });
-
 // Endpoint for handling user registration
 app.post("/register", async (req, res) => {
   const { firstName, lastName, username, password, phoneNumber } = req.body;
 
-  // Set default values for userType and userRole
   const userType = "Student";
   const userRole = "Member";
 
   try {
-    // Check if all required fields are provided
     if (!firstName || !lastName || !username || !password || !phoneNumber) {
       res.status(400).json({ message: "All fields are required" });
       return;
     }
 
-    // Check if the username already exists in the database
-
     const usernameCheckQuery = "SELECT * FROM user WHERE username = ?";
-    const [exsistingUsers] = await res.locals.connection.execute(
+    const [existingUsers] = await res.locals.connection.execute(
       usernameCheckQuery,
       [username]
     );
-    if (exsistingUsers.length > 0) {
-      // Username already exists
+    if (existingUsers.length > 0) {
       res.status(400).json({ message: "Username already exists" });
       return;
     }
+
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const insertQuery =
       "INSERT INTO user (firstName, lastName, username, password, phoneNumber, userType, userRole) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -76,7 +66,7 @@ app.post("/register", async (req, res) => {
       firstName,
       lastName,
       username,
-      password,
+      hashedPassword,
       phoneNumber,
       userType,
       userRole,
@@ -89,14 +79,13 @@ app.post("/register", async (req, res) => {
   } catch (err) {
     console.error("Error querying database:", err);
     res.status(500).json({ message: "Internal server error" });
-    return;
   }
 });
 
 // Endpoint for handling user login
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  console.log("LOGIN", username, password);
+
   try {
     if ((username?.length ?? 0) === 0) {
       throw new Error("Username is required");
@@ -175,7 +164,6 @@ app.post("/borrow", checkIfAuthenticated, async (req, res) => {
 app.post("/return", checkIfAuthenticated, async (req, res) => {
   const { loanId, equipmentId } = req.body;
   try {
-    // Set equipment returned
     const updateLoanQuery = `
     UPDATE loan
     SET returnDate = NOW()
@@ -210,7 +198,6 @@ app.post("/return", checkIfAuthenticated, async (req, res) => {
   } catch (err) {
     console.error("Error querying database:", err);
     res.status(500).json({ message: "Internal server error" });
-    return;
   }
 });
 
@@ -234,7 +221,6 @@ app.get("/borrowed/:userId", async (req, res) => {
   } catch (err) {
     console.error("Error querying database:", err);
     res.status(500).json({ message: "Internal server error" });
-    return;
   }
 });
 

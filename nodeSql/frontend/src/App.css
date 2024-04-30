@@ -1,3 +1,4 @@
+/* Reset styles */
 body {
   font-family: Arial, sans-serif;
   background-color: #1f1f1f;
@@ -7,19 +8,24 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100wh;
+  min-height: 100vh;
+  /* Corrected vh */
 }
 
-
+/* Main container */
 .container {
   background-color: #333333;
   border-radius: 8px;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
   padding: 40px;
-  width: 900px;
-  max-width: 90%;
+  width: 90%;
+  /* Changed max-width to 90% */
+  max-width: 900px;
+  margin: 20px;
+  /* Added margin */
 }
 
+/* Form styles */
 .form-group {
   margin-bottom: 20px;
 }
@@ -44,6 +50,7 @@ input[type="password"] {
   color: #ffffff;
 }
 
+/* Button styles */
 button {
   background-color: #4caf50;
   color: white;
@@ -60,11 +67,13 @@ button:hover {
   background-color: #45a049;
 }
 
+/* Error message styles */
 .error-message {
   color: #ff0000;
   margin-top: 5px;
 }
 
+/* Equipment list styles */
 .equipment-list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
