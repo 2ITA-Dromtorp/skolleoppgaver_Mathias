@@ -1,5 +1,5 @@
 # @name login
-POST http://localhost:3001/login
+POST http://localhost:3001//login
 Content-Type: application/json
 
 {
@@ -10,7 +10,7 @@ Content-Type: application/json
 ###
 @authToken = {{login.response.body.token}}
 
-POST http://localhost:3001/register
+POST http://localhost:3001//register
 Content-Type: application/json
 
 {
@@ -22,12 +22,12 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3001/equipment
+GET http://localhost:3001//equipment
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 ###
-POST http://localhost:3001/borrow
+POST http://localhost:3001//borrow
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
@@ -37,14 +37,14 @@ Authorization: Bearer {{authToken}}
 
 
 ###
-GET http://localhost:3001/borrowed/2
+GET http://localhost:3001//borrowed/2
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 
 
 ###
-POST http://localhost:3001/return
+POST http://localhost:3001//return
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 

@@ -1,6 +1,6 @@
-import React from 'react';
-import { useAuth } from './AuthProvider';
-import './LogoutButton.css';
+import React from "react";
+import { useAuth } from "./AuthProvider";
+import "./LogoutButton.css";
 
 export const LogoutButton = ({ onLogout }) => {
   const { user } = useAuth();
@@ -14,8 +14,8 @@ export const LogoutButton = ({ onLogout }) => {
   }
 
   return (
-    <div className='logout-button-container'>
-      <button className='logout-button' onClick={handleLogout}>
+    <div className="logout-button-container">
+      <button className="logout-button" onClick={handleLogout}>
         Logout {user.firstName} {user.lastName}
       </button>
     </div>
