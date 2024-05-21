@@ -2,33 +2,40 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from './components/auth/AuthProvider';
 import './App.css';
 import RegistrationForm from './components/RegistrationForm';
-import BorrowEquipment from './components/BorrowEquipment';
-import ReturnEquipment from './components/ReturnEquipment'; // Import the ReturnEquipment component
 import { LogoutButton } from "./components/auth/LogoutButton";
 
 function App() {
-  const [elevId, setElevId] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [returnPageVisible, setReturnPageVisible] = useState(false); // State to manage visibility of the return page
-const auth = useAuth();
+  const [foodData, setFoodData] = useState([]);
+  const auth = useAuth();
 
   useEffect(() => {
     if (auth?.isTokenValid()) {
-      setElevId(auth.user.id);
-      }
+      fetchFoodData();
+    }
   }, [auth]);
+
+  const fetchFoodData = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/food', {
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
+      const data = await response.json();
+      setFoodData(data);
+    } catch (error) {
+      console.error('Error fetching food data:', error);
+    }
+  };
 
   const handleLogin = async () => {
     try {
-      await auth.loginAction({username: username, password: password});
+      await auth.loginAction({ username, password });
       if (auth.isTokenValid()) {
-        setElevId(auth.user.id);
+        fetchFoodData();
       }
-      else {
-        setElevId(null);
-      }
-
     } catch (error) {
       console.error('Error during login:', error.message);
     }
@@ -36,15 +43,30 @@ const auth = useAuth();
 
   const handleLogout = () => {
     auth.logOut();
-    setElevId(null);
-    setPassword("");
-    setUsername("");
-    setReturnPageVisible(false);
-  }
+    setUsername('');
+    setPassword('');
+    setFoodData([]);
+  };
 
-  // Function to toggle visibility of the return page
-  const toggleReturnPage = () => {
-    setReturnPageVisible(!returnPageVisible);
+  const updateAvailability = async (id, newAvailability) => {
+    try {
+      const response = await fetch('http://localhost:3001/food/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
+        },
+        body: JSON.stringify({ id, available: newAvailability }),
+      });
+
+      if (response.ok) {
+        fetchFoodData(); // Refresh the food data
+      } else {
+        console.error('Error updating availability');
+      }
+    } catch (error) {
+      console.error('Error updating availability:', error);
+    }
   };
 
   return (
@@ -52,8 +74,18 @@ const auth = useAuth();
       {!auth?.isTokenValid() ? (
         <div>
           <h1>Login</h1>
-          <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <button onClick={handleLogin}>Login</button>
 
           {/* Registration Form */}
@@ -63,17 +95,18 @@ const auth = useAuth();
       ) : (
         <div>
           <LogoutButton onLogout={handleLogout} />
-          {/* If returnPageVisible is true, render the ReturnEquipment component */}
-          {returnPageVisible ? (
-            <ReturnEquipment elevId={elevId} />
-          ) : (
-            <BorrowEquipment elevId={elevId} />
-          )}
-
-          {/* Button to toggle visibility of the return page */}
-          <button onClick={toggleReturnPage}>
-            {returnPageVisible ? 'Hide Return Equipment' : 'Return Equipment'}
-          </button>
+          <h2>Food Menu</h2>
+          <ul>
+            {foodData.map((item) => (
+              <li key={item.id}>
+                {item.name} - ${item.price} - Available: {item.available}
+                <div>
+                  <button onClick={() => updateAvailability(item.id, item.available + 1)}>Increase</button>
+                  <button onClick={() => updateAvailability(item.id, item.available - 1)} disabled={item.available === 0}>Decrease</button>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
