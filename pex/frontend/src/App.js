@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { useAuth } from './components/auth/AuthProvider';
 import './App.css';
 import RegistrationForm from './components/RegistrationForm';
 import { LogoutButton } from "./components/auth/LogoutButton";
+import AdminNavbar from './components/AdminNavbar';
+import OrderForm from './components/OrderForm';
+import { ManageUsers, ManageOrders, ManageStock } from './components/AdminManagement';
 
 function App() {
   const [username, setUsername] = useState('');
@@ -48,68 +52,60 @@ function App() {
     setFoodData([]);
   };
 
-  const updateAvailability = async (id, newAvailability) => {
-    try {
-      const response = await fetch('http://localhost:3001/food/update', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${auth.token}`,
-        },
-        body: JSON.stringify({ id, available: newAvailability }),
-      });
-
-      if (response.ok) {
-        fetchFoodData(); // Refresh the food data
-      } else {
-        console.error('Error updating availability');
-      }
-    } catch (error) {
-      console.error('Error updating availability:', error);
-    }
-  };
-
   return (
-    <div className="App">
-      {!auth?.isTokenValid() ? (
-        <div>
-          <h1>Login</h1>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button onClick={handleLogin}>Login</button>
+    <Router>
+      <div className="App">
+        {!auth?.isTokenValid() ? (
+          <div>
+            <h1>Login</h1>
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button onClick={handleLogin}>Login</button>
 
-          {/* Registration Form */}
-          <h2>Registration</h2>
-          <RegistrationForm />
-        </div>
-      ) : (
-        <div>
-          <LogoutButton onLogout={handleLogout} />
-          <h2>Food Menu</h2>
-          <ul>
-            {foodData.map((item) => (
-              <li key={item.id}>
-                {item.name} - ${item.price} - Available: {item.available}
-                <div>
-                  <button onClick={() => updateAvailability(item.id, item.available + 1)}>Increase</button>
-                  <button onClick={() => updateAvailability(item.id, item.available - 1)} disabled={item.available === 0}>Decrease</button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+            {/* Registration Form */}
+            <h2>Registration</h2>
+            <RegistrationForm />
+          </div>
+        ) : (
+          <div>
+            <LogoutButton onLogout={handleLogout} />
+            <h2>Food Menu</h2>
+            <ul>
+              {foodData.map((item) => (
+                <li key={item.id}>
+                  {item.name} - ${item.price} - Available: {item.available}
+                </li>
+              ))}
+            </ul>
+            {auth.user.userRole === 'Admin' && (
+              <div>
+                <AdminNavbar />
+                <Routes>
+                  <Route path="/admin/users" element={<ManageUsers />} />
+                  <Route path="/admin/orders" element={<ManageOrders />} />
+                  <Route path="/admin/stock" element={<ManageStock />} />
+                </Routes>
+              </div>
+            )}
+            {auth.user.userRole !== 'Admin' && (
+              <div>
+                <OrderForm />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </Router>
   );
 }
 
