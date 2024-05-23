@@ -52,6 +52,46 @@ function App() {
     setFoodData([]);
   };
 
+  const handeDeleteUser = async (id) => {
+    console.info("Deleting user: ", id);
+    try {
+      await fetch(`http://localhost:3001/admin/users/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
+
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  const handlePlaceOrder = async (cart) => {
+    try {
+      await Promise.all(cart?.map(async item => {
+        if (item.quantity > 0) {
+          await fetch(`http://localhost:3001/order`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userId: auth.user.id,
+              foodId: item.id,
+              quantity: item.quantity,
+            }),
+          });
+        }
+      }));
+    } catch (error) {
+      console.error('Error placing order:', error);
+    }
+
+    await fetchFoodData();
+  }
+
   return (
     <Router>
       <div className="App">
@@ -81,7 +121,7 @@ function App() {
             <LogoutButton onLogout={handleLogout} />
             <h2>Food Menu</h2>
             <ul>
-              {foodData.map((item) => (
+              {foodData?.map((item) => (
                 <li key={item.id}>
                   {item.name} - ${item.price} - Available: {item.available}
                 </li>
@@ -91,15 +131,15 @@ function App() {
               <div>
                 <AdminNavbar />
                 <Routes>
-                  <Route path="/admin/users" element={<ManageUsers />} />
-                  <Route path="/admin/orders" element={<ManageOrders />} />
+                  <Route path="/admin/users" element={<ManageUsers onDeleteUser={handeDeleteUser} />} />
+                    <Route path="/admin/orders" element={<ManageOrders />} />
                   <Route path="/admin/stock" element={<ManageStock />} />
                 </Routes>
               </div>
             )}
             {auth.user.userRole !== 'Admin' && (
               <div>
-                <OrderForm />
+                  <OrderForm foodData={foodData} placeOrder={handlePlaceOrder} />
               </div>
             )}
           </div>

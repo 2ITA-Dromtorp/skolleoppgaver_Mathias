@@ -70,7 +70,7 @@ app.post('/login', async (req, res) => {
 
 app.get('/food', checkIfAuthenticated, async (req, res) => {
   try {
-    const [food] = await connection.query('SELECT * FROM food');
+    const [food] = await connection.query('SELECT * FROM food WHERE available > 0');
     res.status(200).json(food);
   } catch (err) {
     console.error('Error querying database:', err);
@@ -81,13 +81,20 @@ app.get('/food', checkIfAuthenticated, async (req, res) => {
 app.post('/order', checkIfAuthenticated, async (req, res) => {
   const { userId, foodId, quantity } = req.body;
 
+  if ((quantity ?? 0) == 0 || (userId ?? 0) == 0 || (foodId ?? 0) == 0) {
+    res.status(500).send();
+    return;
+  }
+
   try {
     const insertQuery = 'INSERT INTO orders (userId, foodId, quantity) VALUES (?, ?, ?)';
-    const [result] = await connection.execute(insertQuery, [userId, foodId, quantity]);
-
+    let [result] = await connection.execute(insertQuery, [userId, foodId, quantity]);
     if (result.affectedRows !== 1) throw new Error('Error inserting order into database');
 
+    [result] = await connection.query('UPDATE food SET available = available - ? WHERE id = ?', [quantity, foodId]);
+    if (result.affectedRows !== 1) throw new Error('Error updating food availability');
     res.status(201).json({ message: 'Order placed successfully' });
+
   } catch (err) {
     console.error('Error querying database:', err);
     res.status(500).json({ message: 'Internal server error' });
@@ -102,6 +109,26 @@ app.get('/admin/users', checkIfAuthenticated, async (req, res) => {
     res.status(200).json(users);
   } catch (err) {
     console.error('Error querying database:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+app.delete('/admin/users/:id', checkIfAuthenticated, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (req.auth.userRole !== 'Admin') return res.status(403).json({ message: 'Forbidden' });
+
+    [result] = await connection.query('DELETE FROM user where id = ?', [id]);
+
+    if (result.affectedRows === 1) {
+      res.status(204).send();
+  } else {
+      throw new Error("User not found");
+  }
+
+  } catch (err) {
+    console.error(`Error deleting user: ${id}`, err);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

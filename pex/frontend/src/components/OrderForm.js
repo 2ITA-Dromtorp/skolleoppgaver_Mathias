@@ -2,43 +2,65 @@ import React, { useState } from 'react';
 import './OrderForm.css';
 
 const OrderForm = ({ foodData, placeOrder }) => {
-  const [selectedFoodId, setSelectedFoodId] = useState(foodData[0]?.id || '');
-  const [quantity, setQuantity] = useState(1);
+  const [cart, setCart] = useState([]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    placeOrder(selectedFoodId, quantity);
-  };
+  const handlePlaceOrder = async () => {
+    await placeOrder?.(cart);
+    setCart([]);
+  }
 
-  return (
-    <form onSubmit={handleSubmit} className="order-form">
-      <h2>Place an Order</h2>
-      <div className="form-group">
-        <label htmlFor="food">Food Item:</label>
-        <select
-          id="food"
-          value={selectedFoodId}
-          onChange={(e) => setSelectedFoodId(e.target.value)}
-        >
-          {foodData.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="form-group">
-        <label htmlFor="quantity">Quantity:</label>
+  const selectableFood = (item) => {
+    return (
+      <div key={item.id}>
+        {item.name}&nbsp;
         <input
           type="number"
-          id="quantity"
-          min="1"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
+          min="0"
+          max={item.available}
+          value={cart.find((cartItem) => cartItem.id === item.id)?.quantity || 0}
+          onChange={(e) => {
+            const value = parseInt(e.target.value);
+            if (value >= 0 && value <= item.available) {
+              let foundInCart = false;
+              const updatedCart = cart.map((cartItem) => {
+                if (cartItem.id === item.id) {
+                  foundInCart = true;
+                  return { ...cartItem, quantity: value, sum: item.price * value };
+                }
+                return cartItem;
+              });
+
+              if (!foundInCart) {
+                updatedCart.push({ id: item.id, itemPrice: item.price, quantity: value, sum: item.price * value });
+              }
+
+              setCart(updatedCart);
+            }
+          }}
         />
       </div>
-      <button type="submit">Place Order</button>
-    </form>
+    );
+  };
+
+  const orderSummary = () => {
+    const totalCost = cart.reduce((total, item) => total + item.sum, 0);
+    return (
+      <>
+      <p>Total cost: ${totalCost}</p>
+      </>
+    );
+  };
+
+
+  return (
+    <>
+      <h2>Selections</h2>
+      {foodData?.map(selectableFood)}
+
+      {orderSummary()}
+
+      <button onClick={handlePlaceOrder}>Purchase</button>
+    </>
   );
 };
 

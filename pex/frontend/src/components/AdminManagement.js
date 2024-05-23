@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import './AdminManagement.css';
+import { useAuth } from './auth/AuthProvider';
 
 export const ManageUsers = ({ onUpdateUser, onDeleteUser }) => {
   const [users, setUsers] = useState([]);
+  const {token, isTokenValid} = useAuth();
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
-    const response = await fetch('http://localhost:3001/users');
+    const response = await fetch('http://localhost:3001/admin/users', {
+      headers: {
+      Authorization: `Bearer ${token}`
+      }
+    });
     const data = await response.json();
     setUsers(data);
   };
 
-  const handleUpdateUser = (userId, updatedUserData) => {
-    onUpdateUser(userId, updatedUserData);
-    fetchUsers();
-  };
-
-  const handleDeleteUser = (userId) => {
-    onDeleteUser(userId);
+  const handleDeleteUser = async (userId) => {
+    await onDeleteUser(userId);
     fetchUsers();
   };
 
@@ -28,11 +29,10 @@ export const ManageUsers = ({ onUpdateUser, onDeleteUser }) => {
     <div className="admin-management">
       <h2>Manage Users</h2>
       <ul>
-        {users.map((user) => (
+        {users?.map((user) => (
           <li key={user.id}>
             {user.username} - {user.email} - {user.userRole}
-            <button onClick={() => handleUpdateUser(user.id, { userRole: 'Admin' })}>Make Admin</button>
-            <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
+            {onDeleteUser && <button onClick={() => handleDeleteUser(user.id)}>Delete</button>}
           </li>
         ))}
       </ul>
