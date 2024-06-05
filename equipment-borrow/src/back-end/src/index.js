@@ -3,6 +3,7 @@ const { notFound, errorHandler } = require('./middleware/error-handlers');
 const cors = require('cors');
 const config = require("./config");
 const authRouter = require('./routes/auth');
+const productsRouter = require('./routes/products');
 const usersRouter = require('./routes/users');
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Load API routes
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/products', productsRouter);
 app.use('/api/v1/users', usersRouter);
 
 // Handle "exceptions"
