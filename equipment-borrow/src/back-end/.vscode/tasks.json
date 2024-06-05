@@ -1,0 +1,28 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "problemMatcher": [],
+      "label": "npm: start",
+      "detail": "Run in dev mode",
+      "isBackground": true
+    },
+    {
+      "type": "npm",
+      "script": "prod",
+      "problemMatcher": [],
+      "label": "npm: prod",
+      "detail": "Run in production mode",
+      "isBackground": true
+    },
+    {
+      "type": "npm",
+      "script": "install",
+      "problemMatcher": [],
+      "label": "npm: install",
+      "detail": "install dependencies from package"
+    }
+  ]
+}

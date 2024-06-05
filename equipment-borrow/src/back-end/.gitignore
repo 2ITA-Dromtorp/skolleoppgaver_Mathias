@@ -1,0 +1,24 @@
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# local files such as local dotenv environment variable files
+*.local
+
+# Dependency directories
+node_modules/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

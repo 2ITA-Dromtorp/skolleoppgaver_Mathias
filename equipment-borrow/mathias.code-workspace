@@ -1,0 +1,51 @@
+{
+  "folders": [
+    {
+      "name": "Front-End",
+      "path": "./src/front-end"
+    },
+    {
+      "name": "Back-End",
+      "path": "./src/back-end"
+    },
+    {
+      "name": "Other",
+      "path": "./"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "src/front-end/": true,
+      "src/back-end/": true
+    },
+
+    "workspace-terminals.switchTerminal": "fromWorkspaceTerminals"
+  },
+
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [],
+    "compounds": [
+      {
+        "name": "Launch Both",
+        "configurations": [
+          {
+            "folder": "Back-End",
+            "name": "Launch Back-End"
+          },
+          {
+            "folder": "Front-End",
+            "name": "Launch Front-End"
+          }
+        ]
+      }
+    ]
+  },
+
+  "extensions": {
+    "recommendations": [
+      "joshx.workspace-terminals",
+      "humao.rest-client"
+    ]
+  }
+}
