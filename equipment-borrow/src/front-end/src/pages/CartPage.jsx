@@ -1,15 +1,8 @@
-import { Container, Table, Button } from 'react-bootstrap';
-import useCart from '../hooks/useCart';
-import { useNavigate } from 'react-router-dom';
+import { Container, Table, Button } from "react-bootstrap";
+import useCart from "../hooks/useCart";
 
 function CartPage() {
-  const { cartItems, addCartItem, removeCartItem, completePurchase } = useCart();
-  const navigate = useNavigate();
-
-  const handleCompletePurchase = () => {
-    completePurchase();
-    navigate('/');
-  };
+  const { cartItems, addCartItem, removeCartItem } = useCart();
 
   return (
     <Container>
@@ -43,7 +36,7 @@ function CartPage() {
           ))}
         </tbody>
       </Table>
-      <Button variant="primary" className="mt-3" onClick={handleCompletePurchase}>
+      <Button variant="primary" size="md" className="mt-3" block>
         Complete Purchase
       </Button>
     </Container>
