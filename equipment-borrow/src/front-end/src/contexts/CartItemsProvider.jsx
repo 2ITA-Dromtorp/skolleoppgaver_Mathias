@@ -8,7 +8,7 @@ const cartStorageKey = "cart";
 function getCachedCart() {
   const cartData = localStorage.getItem(cartStorageKey);
   try {
-    return cartData == null ? null : JSON.parse(cartData);
+    return cartData == null ? [] : JSON.parse(cartData);
   }
   catch (error) {
     console.error("Failed to read stored cart", error);
