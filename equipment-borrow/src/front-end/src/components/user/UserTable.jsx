@@ -1,5 +1,5 @@
 import { validUserRoles, validUserTypes } from "../../services/user-service";
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { Button, Table } from "react-bootstrap";
 
 /**
@@ -38,8 +38,9 @@ function UserTable({ users, onEdit = null, onDelete = null }) {
     <thead>
       <tr>
         <th className="col-1">#</th>
-        <th className="col-3">Fornavn</th>
-        <th className="col-3">Etternavn</th>
+        <th className="col-2">Firma</th>
+        <th className="col-2">Fornavn</th>
+        <th className="col-2">Etternavn</th>
         <th className="col-2">Brukernavn</th>
         <th className="col-1">Rolle</th>
         <th className="col-1">Type</th>
@@ -50,6 +51,7 @@ function UserTable({ users, onEdit = null, onDelete = null }) {
       {users.map((item) => (
         <tr key={item.id}>
           <td>{item.id}</td>
+          <td>{item.company}</td>
           <td>{item.firstName}</td>
           <td>{item.lastName}</td>
           <td>{item.username}</td>

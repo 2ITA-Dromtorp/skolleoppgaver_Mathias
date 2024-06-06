@@ -7,13 +7,16 @@ import App from "./App";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
-import { AuthProvider } from "./components/auth/AuthProvider";
-import BaseUriRequestInterceptor from "./components/BaseUriRequestInterceptor";
+import { AuthProvider } from "./contexts/AuthProvider";
+import BaseUriRequestInterceptor from "./interceptors/BaseUriRequestInterceptor";
+import { CartItemsProvider } from "./contexts/CartItemsProvider";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <AuthProvider>
     <BaseUriRequestInterceptor baseUri="http://localhost:3000/api">
-      <App />
+      <CartItemsProvider>
+          <App />
+        </CartItemsProvider>
     </BaseUriRequestInterceptor>
   </AuthProvider>
 );

@@ -1,4 +1,4 @@
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { validUserRoles, validUserTypes } from "../../services/user-service";
@@ -47,6 +47,7 @@ function UserEditModalForm({ user, show, onSave = null, onCancel = null }) {
    * Handles the close action.
    */
   const handleClose = () => {
+    onCancel?.();
   }
 
   return (
@@ -56,6 +57,11 @@ function UserEditModalForm({ user, show, onSave = null, onCancel = null }) {
       </Modal.Header>
       <Modal.Body>
         {formUser && <Form>
+          <Form.Group controlId="formCompany">
+            <Form.Label>Firma</Form.Label>
+            <Form.Control type="text" name="company" value={formUser?.company} onChange={handleInputChange} />
+          </Form.Group>
+
           <Form.Group controlId="formUsername">
             <Form.Label>Brukernavn</Form.Label>
             <Form.Control type="text" name="username" value={formUser?.username} onChange={handleInputChange} disabled={user?.id > 0} />

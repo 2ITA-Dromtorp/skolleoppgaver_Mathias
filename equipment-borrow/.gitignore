@@ -1,0 +1,6 @@
+
+# Temp files
+*.tmp
+
+# Office Temp Files
+~$*.~*x

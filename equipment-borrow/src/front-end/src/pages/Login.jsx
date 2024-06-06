@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, CardText, CardTitle, Container } from "react-bootstrap";
+import { Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, CardText, CardTitle, Container } from "react-bootstrap";
 import LoginForm from "../components/auth/LoginForm";
-import { useAuth } from "../components/auth/useAuth";
+import { useAuth } from "../hooks/useAuth";
 
 /**
  * Renders the Login component.
@@ -56,6 +56,7 @@ function Login() {
           <CardBody>
             <LoginForm onSubmit={handleLoginFormSubmit} defaultUsername={user?.username} />
           </CardBody>
+          <CardFooter>Du må være kunde av oss og logge inn for å se varer og handle i vår butikk</CardFooter>
         </Card>
 
         {error instanceof Error && <Card border="danger-subtle" className="mt-3">

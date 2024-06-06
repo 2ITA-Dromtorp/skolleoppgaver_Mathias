@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useAuth } from './useAuth';
+import { useAuth } from '../hooks/useAuth';
 
 /**
  * Interceptor that intercepts outgoing requests and adds authentication headers.

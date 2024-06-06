@@ -3,7 +3,7 @@ const db = require('./db');
 /**
  * Retrieves all users from the database.
  *
- * @returns {Promise<Array<{id: number, password: string, firstName: string, lastName: string, username: string, userType: string, userRole: string}>>} A promise that resolves to an array of user objects.
+ * @returns {Promise<Array<{id: number, password: string, firstName: string, lastName: string, username: string, company: string, userType: string, userRole: string}>>} A promise that resolves to an array of user objects.
  */async function getAllUsers() {
   const users = await db.query(
     "SELECT * FROM User",
@@ -16,7 +16,7 @@ const db = require('./db');
  * Retrieves a user by their ID.
  *
  * @param {number} id - The ID of the user.
- * @returns {Promise<{id: number, password: string, firstName: string, lastName: string, username: string, userType: string, userRole: string}>} A promise that resolves to the user object.
+ * @returns {Promise<{id: number, password: string, firstName: string, lastName: string, username: string, company: string, userType: string, userRole: string}>} A promise that resolves to the user object.
  */
 async function getUserById(id) {
   const user = await db.querySingleRow(
@@ -31,7 +31,7 @@ async function getUserById(id) {
  * Retrieves a user by their username.
  *
  * @param {string} username - The username of the user.
- * @returns {Promise<{id: number, password: string, firstName: string, lastName: string, username: string, userType: string, userRole: string}>} A promise that resolves to the user object.
+ * @returns {Promise<{id: number, password: string, firstName: string, lastName: string, username: string, company: string, userType: string, userRole: string}>} A promise that resolves to the user object.
  */
 async function getUserByUsername(username) {
   const user = await db.querySingleRow(
@@ -64,13 +64,14 @@ async function deleteUser(id) {
  * @param {string} user.password - The password of the user.
  * @param {string} user.firstName - The first name of the user.
  * @param {string} user.lastName - The last name of the user.
+ * @param {string} user.company - The company user is employed at
  * @param {string} user.userType - The type of the user.
  * @param {string} user.userRole - The role of the user.
- * @returns {Promise<{id: number, password: string, firstName: string, lastName: string, username: string, userType: string, userRole: string}>} - A promise that resolves to the created user object.
+ * @returns {Promise<{id: number, password: string, firstName: string, lastName: string, username: string, company: string, userType: string, userRole: string}>} - A promise that resolves to the created user object.
  * @throws {Error} - If a user with the same username already exists or if the user creation fails.
  */
 async function createUser(user) {
-  const { username, password, firstName, lastName, userType, userRole } = user;
+  const { username, password, firstName, lastName, company, userType, userRole } = user;
 
   const existingUser = await getUserByUsername(username);
   if (existingUser) {
@@ -79,8 +80,8 @@ async function createUser(user) {
   }
 
   const result = await db.query(
-    "INSERT INTO User (username, password, firstName, lastName, userType, userRole) VALUES (?, ?, ?, ?, ?, ?)",
-    [username, password, firstName, lastName, userType, userRole]
+    "INSERT INTO User (username, password, firstName, lastName, company, userType, userRole) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    [username, password, firstName, lastName, company, userType, userRole]
   );
 
   if (result.affectedRows === 1) {
@@ -98,17 +99,18 @@ async function createUser(user) {
  * @param {string} user.password - The password of the user.
  * @param {string} user.firstName - The first name of the user.
  * @param {string} user.lastName - The last name of the user.
+ * @param {string} user.company - The company user is employed at
  * @param {string} user.userType - The type of the user.
  * @param {string} user.userRole - The role of the user.
- * @returns {Promise<{id: number, password: string, firstName: string, lastName: string, username: string, userType: string, userRole: string}>} - A promise that resolves to the created user object.
+ * @returns {Promise<{id: number, password: string, firstName: string, lastName: string, username: string, company: string, userType: string, userRole: string}>} - A promise that resolves to the created user object.
  * @throws {Error} - If the user update fails.
  */
 async function updateUser(user) {
-  const { id, password, firstName, lastName, userType, userRole } = user;
+  const { id, password, firstName, lastName, company, userType, userRole } = user;
 
   const result = await db.query(
-    "UPDATE User SET password = ?, firstName = ?, lastName = ?, userType = ?, userRole = ? WHERE id = ?",
-    [password, firstName, lastName, userType, userRole, id]
+    "UPDATE User SET password = ?, firstName = ?, lastName = ?, company = ?, userType = ?, userRole = ? WHERE id = ?",
+    [password, firstName, lastName, company, userType, userRole, id]
   );
 
   if (result.affectedRows === 1) {

@@ -26,7 +26,6 @@ function requireRole(role) {
   };
 }
 
-
 /**
  * Combines the ensureAuthenticated and requireRole middleware functions to ensure that the user is authenticated and has the specified role.
  *

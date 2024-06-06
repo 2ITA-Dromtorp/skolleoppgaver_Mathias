@@ -16,8 +16,8 @@ export const validUserRoles = [
  * @type {Array<{ value: string, label: string }>}
  */
 export const validUserTypes = [
-  { value: "student", label: "Elev" },
-  { value: "teacher", label: "Lærer" },
+  { value: "kunde", label: "Kunde" },
+  { value: "ansatt", label: "Ansatt" },
 ]
 
 /**

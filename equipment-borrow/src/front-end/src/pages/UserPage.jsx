@@ -37,6 +37,7 @@ function UserPage() {
       firstName: "",
       lastName: "",
       username: "",
+      company: "",
       userRole: userService.validUserRoles[0].value,
       userType: userService.validUserTypes[0].value,
     });

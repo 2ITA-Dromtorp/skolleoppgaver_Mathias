@@ -8,7 +8,7 @@ function AdminPage() {
   return (
     <Container fluid>
       <h2>Administrasjon</h2>
-      <p>Her kommer administrasjon av brukere, roller, m.m.</p>
+      <p>Her kommer administrasjon av brukere, roller, ordre, m.m.</p>
       <Tabs defaultActiveKey="user" className="my-3">
         <Tab eventKey="user" title="Brukere">
           <UserPage />

@@ -1,3 +1,5 @@
+const orderService = require("../services/orders");
+
 /**
  * Removes the password property from the user object.
  *

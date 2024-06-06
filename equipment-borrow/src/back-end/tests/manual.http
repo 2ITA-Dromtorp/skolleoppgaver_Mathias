@@ -14,7 +14,7 @@ POST {{baseUrl}}/api/v1/auth/login
 Content-Type: application/json
 
 {
-    "username": "trond",
+    "username": "mathias",
     "password": "none"
 }
 
@@ -24,7 +24,7 @@ POST {{baseUrl}}/api/v1/auth/login
 Content-Type: application/json
 
 {
-    "username": "trond",
+    "username": "mathias",
     "password": "aarskog"
 }
 
@@ -38,7 +38,7 @@ Content-Type: application/json
 
 
 ###
-GET {{baseUrl}}/api/v1/users?username=trond
+GET {{baseUrl}}/api/v1/users?username=mathias
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
@@ -81,5 +81,10 @@ Content-Type: application/json
 
 ###
 DELETE {{baseUrl}}/api/v1/users/{{newUserId}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+###
+GET {{baseUrl}}/api/v1/products
 Authorization: Bearer {{authToken}}
 Content-Type: application/json

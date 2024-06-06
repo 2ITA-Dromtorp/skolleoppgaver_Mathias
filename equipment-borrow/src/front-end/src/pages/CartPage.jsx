@@ -1,44 +1,90 @@
-import { Container, Table, Button } from "react-bootstrap";
+import { ProductList } from "../components/product";
+import { Alert, Button, Container, Row } from "react-bootstrap";
+import orderService from "../services/order-service";
 import useCart from "../hooks/useCart";
+import { useAuth } from "../hooks/useAuth";
+import { useEffect, useState } from "react";
 
+function getFormattedPrice(price) {
+  return Number(price).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' });
+}
+
+/**
+ * Renders the Home Page component.
+ */
 function CartPage() {
-  const { cartItems, addCartItem, removeCartItem } = useCart();
+  const { clearCart, cartItems } = useCart();
+  const [cartProducts, setCartProducts] = useState([]);
+  const [orderSent, setOrderSent] = useState(false);
+
+  const { user } = useAuth();
+
+  const calculateTotalPrice = () => {
+    let totalPrice = 0;
+    cartItems?.forEach((item) => {
+      totalPrice += item.quantity * item.product.unitPrice;
+    });
+    return totalPrice;
+  };
+
+  useEffect(() => {
+    setCartProducts(cartItems?.map((c) => c.product));
+  }, [cartItems]);
+
+  const handleAddOrder = async () => {
+    try {
+      const orderLines = cartItems.map((item) => {
+        return {
+          productId: item.product.id,
+          quantity: item.quantity,
+          unitPrice: item.product.unitPrice,
+        };
+      });
+
+      await orderService.createOrder({
+        customerId: user.id,
+        address: "",
+        status: "new",
+        orderLines: orderLines,
+      });
+
+      clearCart();
+      setOrderSent(true);
+    } catch (error) {
+      console.error("Unable to create order", error);
+    }
+  };
+
+  if (orderSent) {
+    return (
+      <Alert variant="success">
+        <Alert.Heading>Ordre sendt!</Alert.Heading>
+        <p>
+          Din ordre er registrert og varene er snart på vei.
+        </p>
+        <hr />
+        <p className="mb-0">Vi kommer snart med en egen side der du kan følge status på din ordre og se odrehistorikk.</p>
+      </Alert>
+    );
+  }
 
   return (
     <Container>
-      <h1 className="mt-3">My Cart</h1>
-      <Table striped bordered hover responsive className="mt-3">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th className="text-center">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cartItems.map((item, index) => (
-            <tr key={item.product.id}>
-              <td>{index + 1}</td>
-              <td>{item.product.name}</td>
-              <td>{item.quantity}</td>
-              <td>{item.product.price}NOK</td>
-              <td className="text-center">
-                <Button variant="success" size="sm" onClick={() => addCartItem(item.product)}>
-                  Add
-                </Button>
-                <Button variant="danger" size="sm" onClick={() => removeCartItem(item.product)}>
-                  Remove
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-      <Button variant="primary" size="md" className="mt-3" block>
-        Complete Purchase
-      </Button>
+      <Row>
+        <h2>Handlekurv</h2>
+        <p>Se gjennom og trykk kjøp 🛍️</p>
+        {cartProducts && <ProductList products={cartProducts} />}
+      </Row>
+      <Row className="d-flex justify-content-center mt-5">
+        {cartProducts?.length > 0 && (<>
+            <h4 className="text-center pb-4">Totalpris {getFormattedPrice(calculateTotalPrice())}</h4>
+          <Button className="col-4 py-3" onClick={() => handleAddOrder()}>
+            Bestill
+            </Button>
+        </>)}
+
+        {cartProducts?.length === 0 && <p>Handlekurven er tom!</p>}
+      </Row>
     </Container>
   );
 }

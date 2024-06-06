@@ -21,8 +21,13 @@ router.post("/login", async (req, res, next) => {
     }
     else if (await authService.validateCredentials(password, user.password)) {
       console.info(`User with username '${username}' logged in`);
+
+      // Do not return the stored password
       removePasswordsFromUser(user);
+
       const token = authService.createJwtToken(user);
+
+      // Decode token to get its expiry (which is divided by 1000 so we need to add that back to get a "real" date)
       const decodedToken = authService.decodeJwtToken(token);
       res.send({ user, token, expires: new Date(decodedToken.exp * 1000) });
 

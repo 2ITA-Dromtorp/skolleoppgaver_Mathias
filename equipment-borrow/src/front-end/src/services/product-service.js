@@ -1,6 +1,7 @@
 import axios from "axios";
+
 /**
- * Retrieves all products.
+ * Retrieves all products from the server.
  * @returns {Promise<Array>} A promise that resolves to an array of products.
  * @throws {Error} If the request to the server fails.
  */

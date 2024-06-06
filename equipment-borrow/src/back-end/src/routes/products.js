@@ -9,9 +9,8 @@ const router = express.Router();
  */
 router.get("/", ensureAuthenticated(), async (req, res, next) => {
   try {
-      // Get All
       console.info(`Get all products`);
-      const products = await productService.getAll();
+      const products = await productService.getAllProducts();
       res.status(200).json(products);
   } catch (error) {
     next(error);

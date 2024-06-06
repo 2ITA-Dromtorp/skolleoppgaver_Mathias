@@ -111,7 +111,7 @@ router.put("/:id([0-9]+)", ensureAuthenticated(), async (req, res, next) => {
 
     // Ensure only admin can set certain user properties such as role and type
     if (req["auth"].userRole !== "admin" && (updatedUser.userType !== currentUser.userType || updatedUser.userRole !== currentUser.userRole)) {
-      console.log("Resetting userType and Role as only admin can change those values");
+      console.warn("Resetting userType and Role as only admin can change those values");
       updatedUser.userType = currentUser.userType;
       updatedUser.userRole = currentUser.userRole;
     }
