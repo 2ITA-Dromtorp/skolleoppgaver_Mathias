@@ -6,6 +6,7 @@ import NotFound from "./pages/NotFound";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import Login from "./pages/Login";
 import ProductPage from "./pages/ProductPage";
+import CartPage from "./pages/CartPage";
 
 /**
  * The main component of the application.
@@ -19,6 +20,7 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path="" element={<ProductPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/cart" element={<CartPage />} />
           </Route>
 
           <Route path="login" element={<Login />} />
