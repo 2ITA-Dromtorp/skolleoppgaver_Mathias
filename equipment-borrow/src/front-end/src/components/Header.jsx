@@ -26,6 +26,10 @@ function Header() {
           <LinkContainer to="/cart">
             <Nav.Link>Handlekurv</Nav.Link>
           </LinkContainer>
+          
+          <LinkContainer to="/feedback">
+            <Nav.Link>Feedback</Nav.Link>
+          </LinkContainer>
 
           <LinkContainer to="/about">
             <Nav.Link>Om oss</Nav.Link>

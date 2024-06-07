@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import AboutPage from "./pages/AboutPage";
 import ProductsPage from "./pages/ProductsPage";
 import CartPage from "./pages/CartPage";
+import FeedbackPage from "./pages/FeedbackPage";
 
 /**
  * The main component of the application.
@@ -32,6 +33,7 @@ function App() {
 
           {/* Public Pages */}
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/feedback" element={<FeedbackPage />} />
           <Route path="login" element={<Login />} />
 
           {/* No matching urls */}

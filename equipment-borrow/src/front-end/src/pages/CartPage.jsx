@@ -27,6 +27,11 @@ function CartPage() {
     return totalPrice;
   };
 
+  const calculateTotalPriceAfterMVA = () => {
+    const totalPrice = calculateTotalPrice();
+    return Math.round(totalPrice * 1.25); // 25%
+  };
+
   useEffect(() => {
     setCartProducts(cartItems?.map((c) => c.product));
   }, [cartItems]);
@@ -77,7 +82,11 @@ function CartPage() {
       </Row>
       <Row className="d-flex justify-content-center mt-5">
         {cartProducts?.length > 0 && (<>
-            <h4 className="text-center pb-4">Totalpris {getFormattedPrice(calculateTotalPrice())}</h4>
+            <h4 className="text-center pb-4">
+              Totalpris før MVA: {getFormattedPrice(calculateTotalPrice())}
+              <br />
+              Totalpris etter MVA: {getFormattedPrice(calculateTotalPriceAfterMVA())}
+            </h4>
           <Button className="col-4 py-3" onClick={() => handleAddOrder()}>
             Bestill
             </Button>
@@ -90,3 +99,4 @@ function CartPage() {
 }
 
 export default CartPage;
+
